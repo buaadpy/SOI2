@@ -1,0 +1,94 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="https://cdn1.lncld.net/static/js/av-mini-0.5.5.js"></script>
+    <audio src="../asset/music/bg_login.mp3" autoplay="autoplay" loop="loop"></audio>
+</head>
+<body style="background-image: url(../asset/image/bg_login.jpg); background-position: center; background-repeat: no-repeat;">
+<!--标题-->
+<div style="position:absolute;top:42%;left:50%;margin:-50px 0 0 -300px;width:600px;height:100px;">
+    <h1 id="title" style="color:#ffffff; font-size:46px;text-align:center;font-family: 'Courier New';">Soul of Iron Ⅱ</h1>
+</div>
+<!--版本号-->
+<div style="position:absolute;top:50%;left:50%;margin:-20px 0 0 -100px;width:200px;height:40px;">
+    <h1 style="color:#ffffff; font-size:15px;text-align:center;font-family: 'Microsoft YaHei'">钢铁之魂II   V0.3</h1>
+</div>
+<!--登录框及按钮-->
+<div style="position:absolute;top:76%;left:50%;margin:-100px 0 0 -95px;width:190px;height:200px;">
+    <h3 style="color:#ffffff; font-size:10px;font-family: 'Microsoft YaHei'">昵称:</h3>
+    <input type="text" id="username" autocomplete="off" style="width: 180px;height: 25px;display: inline-block;vertical-align: top;font: 15px/17px arial;padding: 0;border: 0;outline: 0;
+            background: url(../asset/image/searchBox.png) repeat-x;"/>
+
+    <h3 style="color:#ffffff; font-size:10px;font-family: 'Microsoft YaHei'">密码:</h3>
+    <input type="password" id="password" autocomplete="off" style="width: 180px;height: 25px;display: inline-block;vertical-align: top;font: 15px/17px arial;padding: 0;border: 0;outline: 0;
+            background: url(../asset/image/searchBox.png) repeat-x;"/>
+    <br><br>
+
+    <input type="submit" id="login" value="  登录  " onclick="login()"
+           style="height: 22px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;cursor: pointer;font-family: 'Microsoft YaHei'"/>
+    <script type="text/javascript">
+        function login() {
+            var name = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            if (name == "" || password == "")
+                alert("请输入用户名及密码哦");
+            else {
+                AV.User.logIn(name, password, {
+                    success: function (user) {
+                        window.location.href = "ready.html?" + user.getUsername();
+                    },
+                    error: function (user, error) {
+                        alert("您的用户名或密码不对哦");
+                    }
+                });
+            }
+        }
+    </script>
+
+    <input type="submit" id="register" value="  注册  " onclick="register()"
+           style="height: 22px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;cursor: pointer;font-family: 'Microsoft YaHei'"/>
+    <script type="text/javascript">
+        function register() {
+            var name = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            if (name == "" || password == "")
+                alert("请输入您新账户的用户名及密码哦");
+            else {
+                var user = new AV.User();
+                user.set("username", name);
+                user.set("password", password);
+                user.signUp(null, {
+                    success: function (user) {
+                        AV.User.logIn(name, password, {
+                            success: function (user) {
+                                alert("注册成功，欢迎加入SOI2");
+                                window.location.href = "ready.html?" + user.getUsername();
+                            },
+                            error: function (user, error) {
+                                alert("Error: " + error.code + " " + error.message);
+                            }
+                        });
+                    },
+                    error: function (user, error) {
+                        alert("您的用户名已被使用，请更换用户名");
+                    }
+                });
+            }
+        }
+    </script>
+</div>
+<!--版权声明-->
+<div style="position:absolute;top:93%;left:50%;margin:-20px 0 0 -170px;width:340px;height:40px;">
+    <h1 style="color:#808080; font-size:14px;text-align:center">Copyright © 2015 buaadpy. All Rights Reserved.</h1>
+</div>
+<!--感谢制作-->
+<div style="position:absolute;top:96%;left:50%;margin:-20px 0 0 -170px;width:340px;height:40px;">
+    <h1 style="color:#808080; font-size:14px;text-align:center">Contributors:CrazySssst</h1>
+</div>
+<!--页面启动时执行-->
+<script type="text/javascript">
+    document.getElementById("username").focus();
+    AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
+</script>
+</body>
+</html>

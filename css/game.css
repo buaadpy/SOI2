@@ -1,0 +1,35 @@
+html, body {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0 ;
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0 ;
+}
+
+#gunsight {
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-top:-37px;
+    margin-left:-37px;
+}
+
+#tank_info {
+    position:absolute;
+    top:80%;
+    right:3%;
+}
+
+#tip_info {
+    position:absolute;
+    top:20%;
+    left:50%;
+}
