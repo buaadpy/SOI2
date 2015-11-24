@@ -6,11 +6,11 @@
 </head>
 <body style="background-image: url(../asset/image/bg_ready.jpg); background-position: center; background-repeat: no-repeat;">
 <!--欢迎词-->
-<div style="position:absolute;top:30%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
+<div style="position:absolute;top:55%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
     <h2 id="welcomeword" style="color:#ffffff; font-size:15px;"></h2>
 </div>
 <!--坦克选择-->
-<div style="position:absolute;top:40%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
+<div style="position:absolute;top:65%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
     <h3 style="color:#ffffff; font-size:13px;">请您选择坦克类型:</h3>
     <!--<input type="radio" name="tank" value="tankA" id="tankA"/>-->
     <!--<label for="tankA" style="color:#ffffff">侦察战车</label>-->
@@ -20,7 +20,7 @@
     <!--<label for="tankC" style="color:#ffffff">自行火炮</label>-->
 </div>
 <!--房间选择-->
-<div style="position:absolute;top:55%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
+<div style="position:absolute;top:80%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
     <!--<h3 style="color:#ffffff; font-size:10px;">请您输入房间名称:</h3>-->
     <!--<input type="text" id="roomname" autocomplete="off" style="width: 240px;height: 25px;display: inline-block;vertical-align: top;font: 15px/17px arial;padding: 0;border: 0;outline: 0;-->
             <!--background: url(../asset/image/search_box.png) repeat-x;"/>-->
@@ -40,7 +40,7 @@
     var UserLogin = AV.Object.extend("UserLogin");
     var login = new UserLogin();
     login.set("userName", username);
-    login.set("brownerVersion", (navigator.appVersion).toString());
+//    login.set("brownerVersion", (navigator.appVersion).toString());
     login.save(null, {success: function (post) {},error: function (post, error) {}});
 
     function build() {

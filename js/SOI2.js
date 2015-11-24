@@ -1,6 +1,6 @@
 /**
  * Created by 杜鹏宇 on 2015/7/8
- * Modified by 杜鹏宇 on 2015/10/13
+ * Modified by 杜鹏宇 on 2015/11/24
  */
 
 //钢铁之魂2
@@ -30,28 +30,31 @@ SOI2 = function () {
 //游戏初始化
 SOI2.prototype.init = function () {
     //加载游戏引擎
-    this.canvas = document.getElementById("gameCanvas");
+    this.canvas = document.getElementById('gameCanvas');
     this.engine = new BABYLON.Engine(this.canvas, true);
-//    this.engine.displayLoadingUI();
+    this.engine.displayLoadingUI();
+    setTimeout(function () {
+        game.engine.hideLoadingUI();
+    }, '4000');
     //加载玩家信息
-    this.userName = window.localStorage.getItem("username");
-    this.tankType = window.localStorage.getItem("tanktype");
-    this.battlefield = window.localStorage.getItem("roomname");
-    if (window.localStorage.getItem("host") == "true") {
+    this.userName = window.localStorage.getItem('username');
+    this.tankType = window.localStorage.getItem('tanktype');
+    this.battlefield = window.localStorage.getItem('roomname');
+    if (window.localStorage.getItem('host') == 'true') {
         this.isHost = true;
     } else {
         this.isHost = false;
     }
-//    window.localStorage.removeItem("username");
-//    window.localStorage.removeItem("tanktype");
-//    window.localStorage.removeItem("roomname");
-//    window.localStorage.removeItem("host");
+    window.localStorage.removeItem('username');
+    window.localStorage.removeItem('tanktype');
+    window.localStorage.removeItem('roomname');
+    window.localStorage.removeItem('host');
     //初始化场景
     this.scene = new BABYLON.Scene(this.engine);
     this.scene.gravity = new BABYLON.Vector3(0, -9.8, 0);
     this.scene.collisionsEnabled = true;
     //初始化灯光
-    this.light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), this.scene);
+    this.light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this.scene);
     //初始化加载项
     this.infoControl = new InfoControl();
     this.mapControl = new MapControl();
@@ -80,13 +83,15 @@ SOI2.prototype.load = function () {
     //新建玩家坦克
     this.tankControl.addTank(this.userName, this.userCamp, new BABYLON.Vector3(0, 0, 0), this.tankType);
     //Todo 临时代码
-    if (this.userCamp == "R")
-        this.camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(200 + Math.random()*10, 50, -50+ Math.random()*10), this.scene);
-    else
-        this.camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(-370 + Math.random()*10, 50, -10+ Math.random()*10), this.scene);
+    //添加相机
+    if (this.userCamp == 'R') {
+        this.camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(200 + Math.random() * 10, 50, -50 + Math.random() * 10), this.scene);
+    } else {
+        this.camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(-370 + Math.random() * 10, 50, -10 + Math.random() * 10), this.scene);
+    }
     this.camera.setTarget(new BABYLON.Vector3(0, 30, 0));
     this.camera.attachControl(this.canvas);
-    this.camera.ellipsoid = new BABYLON.Vector3(1, 3, 1);
+    this.camera.ellipsoid = new BABYLON.Vector3(1, 2, 1);
     this.camera.checkCollisions = true;
     this.camera.applyGravity = true;
     this.camera.keysUp = [87];
@@ -94,8 +99,8 @@ SOI2.prototype.load = function () {
     this.camera.keysLeft = [65];
     this.camera.keysRight = [68];
     this.camera.inertia = 0;
-    this.camera.speed = 10;//this.tankControl.myTank.moveSpeed;
-    this.camera.angularSensibility = 3000;//this.tankControl.myTank.rotateSpeed;
+    this.camera.speed = 0;
+    this.camera.angularSensibility = this.tankControl.myTank.gunRotateSpeed;
 
     //加载交互命令
     this.playControl.run();
@@ -120,7 +125,7 @@ SOI2.prototype.update = function () {
     } else {
         //采用60Hz的同步频率
         if (Math.random() * (60 / 60) < 1) {
-            game.commControl.send("Server", game.userName, "updateTankPosition", game.tankControl.myTank.position);
+            this.tankControl.sendTankInfo();
         }
     }
 }
@@ -133,7 +138,7 @@ SOI2.prototype.draw = function () {
 }
 
 //游戏结束
-SOI2.prototype.gameover = function(result){
-    alert("战斗结束，获胜方为："+result);
-    window.location.href = "ready.html";
+SOI2.prototype.gameover = function (result) {
+    alert('战斗结束，获胜方为：' + result);
+    window.location.href = 'ready.html';
 }

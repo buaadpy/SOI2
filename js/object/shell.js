@@ -15,17 +15,18 @@ Shell = function () {
 
 //创造炮弹
 Shell.prototype.create = function (position, direction, speed, damage, id) {
-    this.object = BABYLON.Mesh.CreateBox("", 10.0, 1.0, game.scene);
+    this.object = BABYLON.Mesh.CreateBox('', 10.0, 1.0, game.scene);
     this.object.position = position;
     this.object.direction = direction;
 
     this.speed = speed;
     this.damage = damage;
-    if (id != null)
+    if (id != null) {
         this.id = id;
-    else
-    //随机分配八位id
+    } else {
+        //随机分配八位id
         this.id = Math.floor(Math.random() * 99999999);
+    }
 }
 //炮弹飞行
 Shell.prototype.fly = function () {

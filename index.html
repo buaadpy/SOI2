@@ -8,9 +8,10 @@
 <body>
     <script type="text/javascript">
         if (BABYLON.Engine.isSupported()) {
-            window.location.href = "page/login.html";
+            window.location.href = "page/login.html";//发布模式
+//            window.location.href = "page/ready.html?dpy";//开发模式
         } else {
-            alert("检测到您的浏览器无法运行游戏，请更换浏览器");
+            alert("您的浏览器无法支持游戏，请使用较新版本浏览器");
         }
     </script>
 </body>

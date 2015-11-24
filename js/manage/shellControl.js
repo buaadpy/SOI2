@@ -12,7 +12,7 @@ ShellControl = function () {
 ShellControl.prototype.addShell = function (position, direction, speed, damage) {
     var shell = new Shell();
     shell.create(position, direction, speed, damage);
-    this.shellList[this.shellList.length] = shell;
+    this.shellList.push(shell);
 }
 //让子弹飞
 ShellControl.prototype.fly = function () {
@@ -28,7 +28,7 @@ ShellControl.prototype.serverUpdate = function () {
             position: this.shellList[i].position
         }
     }
-    game.commControl.send("All", "Server", "updateShell", data);
+    game.commControl.send('All', 'Server', 'updateShell', data);
 }
 //客户端更新数据
 ShellControl.prototype.clientUpdate = function (data) {
