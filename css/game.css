@@ -25,11 +25,17 @@ html, body {
 #tank_info {
     position:absolute;
     top:80%;
-    right:3%;
+    right:2%;
 }
 
 #tip_info {
     position:absolute;
     top:20%;
-    left:38%;
+    left:35%;
+}
+
+#smallMap {
+    position:absolute;
+    top:75%;
+    left:1%;
 }

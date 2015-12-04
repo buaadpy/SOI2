@@ -1,6 +1,6 @@
 /**
- * Created by 杜鹏宇 on 2015/9/7
- * Modified by 杜鹏宇 on 2015/11/23
+ * Created by 杜鹏宇 on 2015/09/07
+ * Modified by 杜鹏宇 on 2015/12/04
  */
 
 //指令支持
@@ -128,4 +128,9 @@ PlayControl.prototype.run = function () {
         if (e && e.keyCode == 32) { // 按 空格(发射)
         }
     }
+}
+//控制终止
+PlayControl.prototype.stop = function () {
+    document.onkeydown = null;
+    document.onkeyup = null;
 }

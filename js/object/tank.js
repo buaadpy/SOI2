@@ -51,7 +51,7 @@ Tank.prototype.create = function (user, camp, position, type) {
         this.shootSpeed = 4;//攻击速度
         this.gunRotateSpeed = 3000;//炮台旋转速度
         this.boxRotateSpeed = 0.03;//车身旋转速度
-        this.moveSpeed = 5;//坦克速度
+        this.moveSpeed = 7;//坦克速度
         this.protectDamage = 15;//防御减伤
     } else {
         this.attackDamage = 70;//攻击伤害
@@ -59,7 +59,7 @@ Tank.prototype.create = function (user, camp, position, type) {
         this.shootSpeed = 6;//攻击速度
         this.gunRotateSpeed = 0;//炮台旋转速度
         this.boxRotateSpeed = 0;//车身旋转速度
-        this.moveSpeed = 0.2;//坦克速度
+        this.moveSpeed = 5;//坦克速度
         this.protectDamage = 0;//防御减伤
     }
     //加载坦克模型

@@ -9,7 +9,7 @@
     <script src="../lib/babylon.js"></script>
     <script src="../lib/babylon.objFileLoader.js"></script>
     <script src="https://cdn1.lncld.net/static/js/av-mini-0.5.5.js"></script>
-    <script src="http://192.168.1.129:8000/socket.io/socket.io.js"></script>
+    <script src="http://192.168.1.238:8000/socket.io/socket.io.js"></script>
 </head>
 <body>
 <!--游戏绘制区域-->
@@ -18,12 +18,15 @@
 <img id="gunsight" src="../asset/image/viseur.png"/>
 <!--信息面板-->
 <label id="tip_info" style="font-family: 'Microsoft YaHei';color:#ff0000; font-size:30px;"></label>
+<!--状态面板-->
 <div id="tank_info">
     <label id="info_name" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br><br>
     <label id="info_life" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
     <label id="info_position" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
     <label id="info_height" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label>
 </div>
+<!--小地图-->
+<div id="smallMap"></div>
 
 <script src="../js/SOI2.js"></script>
 <script src="../js/object/shell.js"></script>
@@ -33,11 +36,12 @@
 <script src="../js/manage/shellControl.js"></script>
 <script src="../js/manage/tankControl.js"></script>
 <script src="../js/support/commControl.js"></script>
+<script src="../js/support/particleControl.js"></script>
 <script src="../js/support/playControl.js"></script>
 <script src="../js/support/soundControl.js"></script>
 <script>
     var game = new SOI2();
-    var server = "http://192.168.1.129:8000";
+    var server = "http://192.168.1.238:8000";
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
 
     //游戏启动点

@@ -1,6 +1,6 @@
 /**
  * Created by 杜鹏宇 on 2015/7/8
- * Modified by 杜鹏宇 on 2015/11/24
+ * Modified by 杜鹏宇 on 2015/12/04
  */
 
 //钢铁之魂2
@@ -18,12 +18,14 @@ SOI2 = function () {
     this.battlefield = null;//战场名称
     this.isHost = null;//是否为游戏主机
 
+
     this.infoControl = null;//信息项
     this.mapControl = null;//地图项
     this.shellControl = null;//炮弹项
     this.tankControl = null;//坦克项
-    this.playControl = null;//指令项
     this.commControl = null;//通信项
+    this.particleControl = null;//粒子项
+    this.playControl = null;//指令项
     this.soundControl = null;//声音项
 }
 
@@ -37,18 +39,18 @@ SOI2.prototype.init = function () {
         game.engine.hideLoadingUI();
     }, '4000');
     //加载玩家信息
-    this.userName = window.localStorage.getItem('username');
-    this.tankType = window.localStorage.getItem('tanktype');
-    this.battlefield = window.localStorage.getItem('roomname');
-    if (window.localStorage.getItem('host') == 'true') {
+    this.userName = window.sessionStorage.getItem('username');
+    this.tankType = window.sessionStorage.getItem('tanktype');
+    this.battlefield = window.sessionStorage.getItem('roomname');
+    if (window.sessionStorage.getItem('host') == 'true') {
         this.isHost = true;
     } else {
         this.isHost = false;
     }
-    window.localStorage.removeItem('username');
-    window.localStorage.removeItem('tanktype');
-    window.localStorage.removeItem('roomname');
-    window.localStorage.removeItem('host');
+    window.sessionStorage.removeItem('username');
+    window.sessionStorage.removeItem('tanktype');
+    window.sessionStorage.removeItem('roomname');
+    window.sessionStorage.removeItem('host');
     //初始化场景
     this.scene = new BABYLON.Scene(this.engine);
     this.scene.gravity = new BABYLON.Vector3(0, -9.8, 0);
@@ -60,8 +62,9 @@ SOI2.prototype.init = function () {
     this.mapControl = new MapControl();
     this.shellControl = new ShellControl();
     this.tankControl = new TankControl();
-    this.playControl = new PlayControl();
     this.commControl = new CommControl();
+    this.particleControl = new ParticleControl();
+    this.playControl = new PlayControl();
     this.soundControl = new SoundControl();
     //连接战场,连接成功后启动游戏流程
     this.commControl.run(function () {
@@ -78,16 +81,17 @@ SOI2.prototype.init = function () {
 //游戏内容加载
 SOI2.prototype.load = function () {
     //加载地图
-    this.mapControl.create();
+    this.mapControl.createMap();
+    this.infoControl.showSmallMap();
 
     //新建玩家坦克
     this.tankControl.addTank(this.userName, this.userCamp, new BABYLON.Vector3(0, 0, 0), this.tankType);
     //Todo 临时代码
     //添加相机
     if (this.userCamp == 'R') {
-        this.camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(200 + Math.random() * 10, 50, -50 + Math.random() * 10), this.scene);
+        this.camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(200 + Math.random() * 10, 20, -50 + Math.random() * 10), this.scene);
     } else {
-        this.camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(-370 + Math.random() * 10, 50, -10 + Math.random() * 10), this.scene);
+        this.camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(-370 + Math.random() * 10, 20, -10 + Math.random() * 10), this.scene);
     }
     this.camera.setTarget(new BABYLON.Vector3(0, 30, 0));
     this.camera.attachControl(this.canvas);
@@ -111,7 +115,8 @@ SOI2.prototype.load = function () {
 //游戏逻辑更新
 SOI2.prototype.update = function () {
     this.tankControl.myTankMove();
-    this.infoControl.update(this.tankControl.myTank);
+    this.infoControl.updateInfoPanel(this.tankControl.myTank);
+    this.infoControl.updateSmallMap(this.tankControl.tankList);
     if (this.isHost) {
         //炮弹飞行
         this.shellControl.fly();
@@ -140,5 +145,5 @@ SOI2.prototype.draw = function () {
 //游戏结束
 SOI2.prototype.gameover = function (result) {
     alert('战斗结束，获胜方为：' + result);
-    window.location.href = 'ready.html';
+    window.location.href = 'ready.html?' + this.userName;
 }

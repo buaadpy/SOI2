@@ -33,7 +33,7 @@
 <script type="text/javascript">
     var username = window.location.search;
     username = username.substring(username.indexOf('?') + 1, username.length);
-    window.localStorage.setItem("username", username);
+    window.sessionStorage.setItem("username", username);
     document.getElementById("welcomeword").innerHTML = username + " 欢迎您加入钢铁之魂战场";
 
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
@@ -47,7 +47,7 @@
 //        if (document.getElementById("roomname").value == "")
 //            alert("请输入房间名");
 //        else {
-            window.localStorage.setItem("host", true);
+            window.sessionStorage.setItem("host", true);
             start();
         //}
     }
@@ -56,18 +56,18 @@
 //        if (document.getElementById("roomname").value == "")
 //            alert("请输入房间名");
 //        else {
-            window.localStorage.setItem("host", false);
+            window.sessionStorage.setItem("host", false);
             start();
         //}
     }
 
     function start() {
-        //window.localStorage.setItem("roomname", document.getElementById("roomname").value);
-        window.localStorage.setItem("roomname", "饼饼");
+        //window.sessionStorage.setItem("roomname", document.getElementById("roomname").value);
+        window.sessionStorage.setItem("roomname", "饼饼");
         var obj = document.getElementsByName("tank");
         for (var i = 0; i < obj.length; i++) {
             if (obj[i].checked)
-                window.localStorage.setItem("tanktype", obj[i].value);
+                window.sessionStorage.setItem("tanktype", obj[i].value);
         }
         window.location.href = "game.html";
     }

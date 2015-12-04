@@ -5,7 +5,7 @@
 
 //炮弹管理
 ShellControl = function () {
-    this.shellList = new Array();
+    this.shellList = [];
 }
 
 //新建炮弹
@@ -21,7 +21,7 @@ ShellControl.prototype.fly = function () {
 }
 //服务器发送数据
 ShellControl.prototype.serverUpdate = function () {
-    var data = new Array();
+    var data = [];
     for (var i = 0; i < this.shellList.length; i++) {
         data[i] = {
             id: this.shellList[i].id,

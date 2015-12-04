@@ -8,7 +8,7 @@ MapControl = function () {
 }
 
 //创造地图
-MapControl.prototype.create = function () {
+MapControl.prototype.createMap = function () {
     //加载天空盒
     var skybox = BABYLON.Mesh.CreateBox('skyBox', 2000.0, game.scene);
     var skyboxMaterial = new BABYLON.StandardMaterial('skyBox', game.scene);
@@ -32,4 +32,8 @@ MapControl.prototype.create = function () {
     extraGroundMaterial.diffuseTexture.vScale = 60;
     extraGround.position.y = 2;
     extraGround.material = extraGroundMaterial;
+}
+//丰富地图
+MapControl.prototype.richMap = function () {
+
 }
