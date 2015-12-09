@@ -1,17 +1,18 @@
 /**
  * Created by 杜鹏宇 on 2015/9/7
- * Modified by 杜鹏宇 on 2015/9/15
+ * Modified by
  */
 
 //炮弹管理
 ShellControl = function () {
-    this.shellList = [];
+    this.shellList = [];//子弹列表
+    this.serverData = null;//服务器发送数据，作为外部函数的参数
 }
 
 //新建炮弹
-ShellControl.prototype.addShell = function (position, direction, speed, damage) {
+ShellControl.prototype.addShell = function (position, direction, speed, damage, scene) {
     var shell = new Shell();
-    shell.create(position, direction, speed, damage);
+    shell.create(position, direction, speed, damage, scene);
     this.shellList.push(shell);
 }
 //让子弹飞
@@ -21,14 +22,13 @@ ShellControl.prototype.fly = function () {
 }
 //服务器发送数据
 ShellControl.prototype.serverUpdate = function () {
-    var data = [];
+    this.serverData = [];
     for (var i = 0; i < this.shellList.length; i++) {
-        data[i] = {
+        this.serverData[i] = {
             id: this.shellList[i].id,
             position: this.shellList[i].position
         }
     }
-    game.commControl.send('All', 'Server', 'updateShell', data);
 }
 //客户端更新数据
 ShellControl.prototype.clientUpdate = function (data) {

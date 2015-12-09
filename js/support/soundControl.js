@@ -1,20 +1,23 @@
 /**
  * Created by 杜鹏宇 on 2015/9/7
- * Modified by 杜鹏宇 on 2015/11/24
+ * Modified by
  */
 
 //声音支持
 SoundControl = function () {
-    this.total = 3;//歌曲数目
-    this.tankMove = new BABYLON.Sound('tankMove', '../asset/music/sound/tankMove.mp3', game.scene);//坦克移动音效
-    this.tankFire = new BABYLON.Sound('tankFire', '../asset/music/sound/tankFire.mp3', game.scene);//坦克开火音效
-    this.bomb = new BABYLON.Sound('bomb', '../asset/music/sound/bomb.mp3', game.scene);//炮弹爆炸音效
+    this.tankMove = null;//坦克移动音效
+    this.tankFire = null;//坦克开火音效
+    this.bomb = null;//炮弹爆炸音效
+    this.bgm = null;//背景音乐
 }
 
-//播放背景音乐
-SoundControl.prototype.playBackgroundMusic = function () {
-    var path = Math.floor(Math.random() * this.total);
-    var music = new BABYLON.Sound('Fighting', '../asset/music/fight/fight' + path + '.mp3', game.scene, null, { loop: false, autoplay: true});
+//加载音效资源
+SoundControl.prototype.loadSource = function (scene) {
+    this.tankMove = new BABYLON.Sound('tankMove', '../asset/music/sound/tankMove.mp3', scene);
+    this.tankFire = new BABYLON.Sound('tankFire', '../asset/music/sound/tankFire.mp3', scene);
+    this.bomb = new BABYLON.Sound('bomb', '../asset/music/sound/bomb.mp3', scene);
+    var path = Math.floor(Math.random() * 3);
+    this.bgm = new BABYLON.Sound('Fighting', '../asset/music/fight/fight' + path + '.mp3', scene, null, { loop: false, autoplay: true});
 }
 //坦克行进音效
 SoundControl.prototype.tankMoveSound = function (flag) {

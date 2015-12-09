@@ -1,0 +1,46 @@
+#datadiv {
+    width: 500px;
+    height: 400px;
+    top: 60%;
+    left: 50%;
+    position: absolute;
+    margin-left: -250px;
+    margin-top: -200px;
+    opacity: 0.7;
+    background-color: #000;
+    border-radius: 6px;
+    visibility: hidden;
+    padding: 5px 5px 10px 5px;
+}
+
+.fontset {
+    font-size: 14px;
+}
+
+.reddiv {
+    border-bottom: 1px solid red;
+}
+
+.redcamp {
+    color: red;
+}
+
+.bluediv {
+    border-bottom: 1px solid #1787ff;
+}
+
+.bluecamp {
+    color: #1787ff;
+}
+
+.tableset {
+    width: 490px;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.tableset td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

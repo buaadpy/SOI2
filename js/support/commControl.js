@@ -1,21 +1,14 @@
 /**
  * Created by 杜鹏宇 on 2015/7/23
- * Modified by 杜鹏宇 on 2015/10/13
+ * Modified by
  */
 
 //通信支持
 CommControl = function () {
     this.socket = null;//通信实体
-    this.clientId = '';//客户端ID
-    this.convName = '';//房间名称
-    this.isHost = false;//是否主机
 }
 //建立与服务器的通信
 CommControl.prototype.run = function (call) {
-    this.clientId = game.userName;
-    this.convName = game.battlefield;
-    this.isHost = game.isHost;
-
     //连接websocket后端服务器
     try {
         this.socket = io.connect(server);//server是服务器地址，如http://172.22.227.46:8000
@@ -37,6 +30,11 @@ CommControl.prototype.run = function (call) {
                 }
                 call();
             } else {
+                if (o.onlineCount % 2 == 1) {
+                    o.camp = 'R';
+                } else {
+                    o.camp = 'B';
+                }
                 if (o.camp == game.userCamp) {
                     game.infoControl.friendJoin();
                 } else {
@@ -47,7 +45,7 @@ CommControl.prototype.run = function (call) {
     );
 
     //告诉服务器端有用户登录
-    this.socket.emit('login', {clientId: this.clientId, camp: game.userCamp});
+    this.socket.emit('login', {clientId: game.userName, camp: game.userCamp});
 
     //监听用户退出
     this.socket.on('logout', function (o) {
@@ -61,7 +59,7 @@ CommControl.prototype.run = function (call) {
         }
         if (!game.isHost && obj.from == 'Server') {
             if (obj.command == 'updateTank') {
-                game.tankControl.clientUpdate(obj.data);
+                game.tankControl.clientUpdate(obj.data, game.scene);
             }
             if (obj.command == 'updateShell') {
                 game.shellControl.clientUpdate(obj.data);
@@ -70,7 +68,7 @@ CommControl.prototype.run = function (call) {
         if (game.isHost && obj.to == 'Server') {
             if (obj.command == 'newTank') {
                 var md = obj.data;
-                game.tankControl.addTank(md.user, md.camp, md.position, md.type);
+                game.tankControl.addTank(md.user, md.camp, md.position, md.type, game.scene);
                 console.log('服务器为新玩家' + md.user + '创建坦克');
             }
             if (obj.command == 'sendTankInfo') {
@@ -78,7 +76,7 @@ CommControl.prototype.run = function (call) {
             }
             if (obj.command == 'newShell') {
                 var md = obj.data;
-                game.shellControl.addShell(md.position, md.direction, md.speed, md.damage);
+                game.shellControl.addShell(md.position, md.direction, md.speed, md.damage, game.scene);
             }
         }
     });

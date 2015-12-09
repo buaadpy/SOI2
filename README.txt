@@ -2,6 +2,9 @@
 钢铁之魂2 (by babylon.js & node.js)
 Licensed under the MIT license
 
+Copyright © 2015 buaadpy. All Rights Reserved
+Contributors: CrazySssst, MCJohn117
+
 0.学习资料
 http://doc.babylonjs.com/
 采用babylonjs v2.1版本

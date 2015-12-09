@@ -1,6 +1,6 @@
 /**
  * Created by 杜鹏宇 on 2015/9/10
- * Modified by 杜鹏宇 on 2015/11/24
+ * Modified by
  */
 
 //坦克类
@@ -29,7 +29,7 @@ Tank = function () {
 }
 
 //创造坦克
-Tank.prototype.create = function (user, camp, position, type) {
+Tank.prototype.create = function (user, camp, position, type, scene) {
     this.user = user;
     this.camp = camp;
     this.position = position;
@@ -63,13 +63,13 @@ Tank.prototype.create = function (user, camp, position, type) {
         this.protectDamage = 0;//防御减伤
     }
     //加载坦克模型
-    var material = new BABYLON.StandardMaterial('tankMaterial', game.scene);
+    var material = new BABYLON.StandardMaterial('tankMaterial', scene);
     if (this.camp == 'R') {
         material.diffuseColor = new BABYLON.Color3(255 / 255, 30 / 255, 30 / 255);
     } else {
         material.diffuseColor = new BABYLON.Color3(30 / 255, 30 / 255, 255 / 255);
     }
-    var loader = new BABYLON.AssetsManager(game.scene);
+    var loader = new BABYLON.AssetsManager(scene);
     var _this = this;
     var loadTank = loader.addMeshTask(this.user, ['tank', 'gun'], '../asset/model/', 'testTank.obj');
     loadTank.onSuccess = function () {
@@ -88,12 +88,12 @@ Tank.prototype.create = function (user, camp, position, type) {
     try {
         loader.load();
     } catch (e) {
-        console.log('GameError:' + e);
+        console.log('游戏错误:' + e);
     }
     ;
 
     //加载阵营标记
-    this.mark = BABYLON.Mesh.CreateCylinder(this.user + 'CampMark', 15, 8, 0.1, 6, 1, game.scene);
+    this.mark = BABYLON.Mesh.CreateCylinder(this.user + 'CampMark', 15, 8, 0.1, 6, 1, scene);
     this.mark.position.x = position.x;
     this.mark.position.y = position.y + 30;
     this.mark.position.z = position.z;

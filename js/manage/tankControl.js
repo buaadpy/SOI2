@@ -1,73 +1,69 @@
 /**
  * Created by 杜鹏宇 on 2015/09/07
- * Modified by 杜鹏宇 on 2015/12/04
+ * Modified by
  */
 
 //坦克管理
 TankControl = function () {
-    this.myTank = null;
-    this.tankList = [];
+    this.myTank = null;//本机坦克
+    this.tankList = [];//坦克列表
     this.playerNumber = 0;//玩家人数
     this.redLive = 0;//红方存活数量
     this.blueLive = 0;//蓝方存活数量
-    this.deathView = false;
+    this.deathView = false;//死亡视角标记
+    this.serverData = null;//服务器发送数据，作为外部函数的参数
 }
 
 //添加坦克
-TankControl.prototype.addTank = function (user, camp, position, type) {
+TankControl.prototype.addTank = function (user, camp, position, type, scene) {
     var tank = new Tank();
-    tank.create(user, camp, position, type);
+    tank.create(user, camp, position, type, scene);
     this.tankList.push(tank);
-    if (user == game.userName) {
-        this.myTank = tank;
-        if (!game.isHost)
-            game.commControl.send('Server', game.userName, 'newTank', {user: user, camp: camp, position: position, type: type});
-    }
     this.playerNumber++;
     if (camp == 'R') {
         this.redLive++;
     } else {
         this.blueLive++;
     }
+    return tank;
 }
 //移动玩家坦克
-TankControl.prototype.myTankMove = function () {
+TankControl.prototype.myTankMove = function (camera, infoControl) {
     if (!this.myTank.live) {
         if (!this.deathView) {
             var t = document.getElementById('gunsight');
             t.parentNode.removeChild(t);
-            game.camera.applyGravity = false;
-            game.camera.speed = 40;
-            game.camera.position = new BABYLON.Vector3(0, 50, 0);
-            game.playControl.stop();
-            game.infoControl.death();
+            camera.applyGravity = false;
+            camera.speed = 40;
+            camera.position = new BABYLON.Vector3(0, 50, 0);
+            infoControl.death();
             this.deathView = true;
         }
     } else {
         //限定坦克炮筒角度
-        if (game.camera.rotation.x > 0.5) game.camera.rotation.x = 0.5;
-        if (game.camera.rotation.x < -0.5) game.camera.rotation.x = -0.5;
+        if (camera.rotation.x > 0.5) camera.rotation.x = 0.5;
+        if (camera.rotation.x < -0.5) camera.rotation.x = -0.5;
         //因为相机附带移动效果因此让坦克跟随相机
-        this.myTank.position.x = game.camera.position.x;
-        this.myTank.position.y = game.camera.position.y - 3.5;
-        this.myTank.position.z = game.camera.position.z;
-        this.myTank.rotation_gun = game.camera.rotation;
+        this.myTank.position.x = camera.position.x;
+        this.myTank.position.y = camera.position.y - 3.5;
+        this.myTank.position.z = camera.position.z;
+        this.myTank.rotation_gun = camera.rotation;
         //控制旋转，随机数作为抖动因子模拟移动的颠簸
         this.myTank.rotation_box.y += this.myTank.rotationFlag * this.myTank.boxRotateSpeed * (Math.random());
         //坦克入水
         if (this.myTank.position.y <= 3) {
-            game.infoControl.swim();
+            infoControl.swim();
         }
     }
 }
-//向服务器发送当前坦克状态
-TankControl.prototype.sendTankInfo = function () {
+//获取向服务器发送当前坦克状态的数据
+TankControl.prototype.getTankData = function () {
     var data = {
-        position: game.tankControl.myTank.position,
-        rotation_box: game.tankControl.myTank.rotation_box,
-        rotation_gun: game.tankControl.myTank.rotation_gun
+        position: this.myTank.position,
+        rotation_box: this.myTank.rotation_box,
+        rotation_gun: this.myTank.rotation_gun
     }
-    game.commControl.send('Server', game.userName, 'sendTankInfo', data);
+    return data;
 }
 //服务器更新单一坦克位置
 TankControl.prototype.updateTankInfo = function (user, data) {
@@ -80,16 +76,16 @@ TankControl.prototype.updateTankInfo = function (user, data) {
         }
     }
 }
-//服务器计算游戏逻辑
+//服务器计算游戏数据
 TankControl.prototype.serverUpdate = function () {
-    var data = [];
+    this.serverData = [];
     for (var i = 0; i < this.tankList.length; i++) {
         //坦克入水
         if (this.tankList[i].position.y <= 3) {
             if (this.tankList[i].life >= 0) this.tankList[i].life -= 0.3;
         }
         //判断坦克是否存活
-        if (this.tankList[i].life <= 0) {
+        if (this.tankList[i].live && this.tankList[i].life <= 0) {
             this.tankList[i].live = false;
             if (this.tankList[i].camp == 'R') {
                 this.redLive--;
@@ -98,7 +94,7 @@ TankControl.prototype.serverUpdate = function () {
             }
         }
         //添加发送数据
-        data[i] = {
+        this.serverData[i] = {
             user: this.tankList[i].user,
             camp: this.tankList[i].camp,
             position: this.tankList[i].position,
@@ -109,19 +105,18 @@ TankControl.prototype.serverUpdate = function () {
             life: this.tankList[i].life
         }
     }
-    game.commControl.send('All', 'Server', 'updateTank', data);
 }
 //客户端更新数据
-TankControl.prototype.clientUpdate = function (data) {
+TankControl.prototype.clientUpdate = function (data, scene) {
     for (var i = 0; i < data.length; i++) {
         try {
-            if (data[i].user == this.myTank.user){
+            if (data[i].user == this.myTank.user) {
                 this.tankList[i].live = data[i].live;
                 this.tankList[i].life = data[i].life;
                 continue;
             }
         } catch (e) {
-        };
+        }
         var flag = false;
         for (var j = 0; j < this.tankList.length; j++) {
             if (data[i].user == this.tankList[j].user) {
@@ -136,17 +131,17 @@ TankControl.prototype.clientUpdate = function (data) {
         }
         if (!flag) {
             console.log('客户端接收到坦克' + data[i].user);
-            this.addTank(data[i].user, data[i].camp, data[i].position, data[i].type);
+            this.addTank(data[i].user, data[i].camp, data[i].position, data[i].type, scene);
         }
     }
 }
 //绘制坦克新的位置
-TankControl.prototype.draw = function () {
+TankControl.prototype.draw = function (scene) {
     for (var i = 0; i < this.tankList.length; i++) {
         //阵亡坦克移除箭头指示
         if (!this.tankList[i].live) {
             if (this.tankList[i].mark != null) {
-                game.scene.removeMesh(this.tankList[i].mark);
+                scene.removeMesh(this.tankList[i].mark);
                 this.tankList[i].mark = null;
             }
             return;
@@ -164,12 +159,13 @@ TankControl.prototype.draw = function () {
         this.tankList[i].mark.position.z = this.tankList[i].position.z;
     }
 }
-//判断游戏是否结束
-TankControl.prototype.isGameover = function () {
+//获取游戏胜利方
+TankControl.prototype.getWinner = function () {
     if (this.playerNumber > 1) {
-        if (this.redLive == 0)
-            game.commControl.send('All', 'Server', 'gameOver', 'Blue');
-        if (this.blueLive == 0)
-            game.commControl.send('All', 'Server', 'gameOver', 'Red');
+        if (this.redLive <= 0)
+            return '蓝军阵营';
+        if (this.blueLive <= 0)
+            return '红军阵营';
+        return null;
     }
 }

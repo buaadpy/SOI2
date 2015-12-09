@@ -1,6 +1,6 @@
 /**
  * Created by 杜鹏宇 on 2015/9/7
- * Modified by 杜鹏宇 on 2015/9/15
+ * Modified by
  */
 
 //炮弹类
@@ -14,8 +14,8 @@ Shell = function () {
 }
 
 //创造炮弹
-Shell.prototype.create = function (position, direction, speed, damage, id) {
-    this.object = BABYLON.Mesh.CreateBox('', 10.0, 1.0, game.scene);
+Shell.prototype.create = function (position, direction, speed, damage, id, scene) {
+    this.object = BABYLON.Mesh.CreateBox('', 10.0, 1.0, scene);
     this.object.position = position;
     this.object.direction = direction;
 

@@ -1,29 +1,31 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script src="https://cdn1.lncld.net/static/js/av-mini-0.5.5.js"></script>
     <audio src="../asset/music/bg_ready.mp3" autoplay="autoplay" loop="loop"></audio>
 </head>
-<body style="background-image: url(../asset/image/bg_ready.jpg); background-position: center; background-repeat: no-repeat;">
+<body style="background: url(../asset/image/bg_ready.jpg); background-repeat:no-repeat;">
 <!--欢迎词-->
-<div style="position:absolute;top:55%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
-    <h2 id="welcomeword" style="color:#ffffff; font-size:15px;"></h2>
+<div style="position:absolute;top:30%;left:50%;margin:-30px 0 0 -150px;width:300px;height:60px;">
+    <strong id="user" style="color:#ffffff; font-size:20px;"></strong><br>
+    <strong style="color:#ffffff; font-size:20px;">欢迎您加入钢铁之魂战场</strong>
 </div>
 <!--坦克选择-->
-<div style="position:absolute;top:65%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
-    <h3 style="color:#ffffff; font-size:13px;">请您选择坦克类型:</h3>
-    <!--<input type="radio" name="tank" value="tankA" id="tankA"/>-->
-    <!--<label for="tankA" style="color:#ffffff">侦察战车</label>-->
+<div style="position:absolute;top:62%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
+    <h3 style="color:#ffffff; font-size:17px;">请您选择坦克类型:</h3>
+    <input type="radio" name="tank" value="tankA" id="tankA" disabled="disabled"/>
+    <label for="tankA" style="color:#ffffff">侦察战车</label>
     <input type="radio" name="tank" value="tankB" id="tankB" checked="checked"/>
     <label for="tankB" style="color:#ffffff">重型坦克</label>
-    <!--<input type="radio" name="tank" value="tankC" id="tankC"/>-->
-    <!--<label for="tankC" style="color:#ffffff">自行火炮</label>-->
+    <input type="radio" name="tank" value="tankC" id="tankC" disabled="disabled"/>
+    <label for="tankC" style="color:#ffffff">自行火炮</label>
 </div>
 <!--房间选择-->
-<div style="position:absolute;top:80%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
+<div style="position:absolute;top:80%;left:50%;margin:-50px 0 0 -130px;width:260px;height:100px;">
     <!--<h3 style="color:#ffffff; font-size:10px;">请您输入房间名称:</h3>-->
     <!--<input type="text" id="roomname" autocomplete="off" style="width: 240px;height: 25px;display: inline-block;vertical-align: top;font: 15px/17px arial;padding: 0;border: 0;outline: 0;-->
-            <!--background: url(../asset/image/search_box.png) repeat-x;"/>-->
+    <!--background: url(../asset/image/search_box.png) repeat-x;"/>-->
     <br/><br/>
     <input type="submit" id="build" value="   建立战场   " onclick="build()"
            style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;cursor: pointer;"/>
@@ -34,21 +36,23 @@
     var username = window.location.search;
     username = username.substring(username.indexOf('?') + 1, username.length);
     window.sessionStorage.setItem("username", username);
-    document.getElementById("welcomeword").innerHTML = username + " 欢迎您加入钢铁之魂战场";
+    document.getElementById("user").innerHTML = username;
 
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
     var UserLogin = AV.Object.extend("UserLogin");
     var login = new UserLogin();
     login.set("userName", username);
-//    login.set("brownerVersion", (navigator.appVersion).toString());
-    login.save(null, {success: function (post) {},error: function (post, error) {}});
+    //    login.set("brownerVersion", (navigator.appVersion).toString());
+    login.save(null, {success: function (post) {
+    }, error: function (post, error) {
+    }});
 
     function build() {
 //        if (document.getElementById("roomname").value == "")
 //            alert("请输入房间名");
 //        else {
-            window.sessionStorage.setItem("host", true);
-            start();
+        window.sessionStorage.setItem("host", true);
+        start();
         //}
     }
 
@@ -56,8 +60,8 @@
 //        if (document.getElementById("roomname").value == "")
 //            alert("请输入房间名");
 //        else {
-            window.sessionStorage.setItem("host", false);
-            start();
+        window.sessionStorage.setItem("host", false);
+        start();
         //}
     }
 

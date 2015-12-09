@@ -1,6 +1,6 @@
 /**
  * Created by 杜鹏宇 on 2015/09/07
- * Modified by 杜鹏宇 on 2015/12/04
+ * Modified by
  */
 
 //指令支持
@@ -12,21 +12,26 @@ PlayControl = function () {
 }
 
 //设定指令
-PlayControl.prototype.run = function () {
+PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, infoControl) {
     //移动停止
     var moveStop = function () {
-        game.camera.speed = 0;
-        game.tankControl.myTank.rotationFlag = 0;
-        game.soundControl.tankMoveSound(false);
+        camera.speed = 0;
+        myTank.rotationFlag = 0;
+        soundControl.tankMoveSound(false);
     }
 
     document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
+        if (e && e.keyCode == 88) { // 按 X
+            infoControl.showUserList(tankList);
+        }
+        //位于死亡视角不能进行其他操作
+        if (!myTank.live) return;
         //角度归一化
-        game.camera.rotation.y = game.camera.rotation.y % (2 * Math.PI);
-        if (game.camera.rotation.y < 0) game.camera.rotation.y += 2 * Math.PI;
-        game.tankControl.myTank.rotation_box.y = game.tankControl.myTank.rotation_box.y % (2 * Math.PI);
-        if (game.tankControl.myTank.rotation_box.y < 0) game.tankControl.myTank.rotation_box.y += 2 * Math.PI;
+        camera.rotation.y = camera.rotation.y % (2 * Math.PI);
+        if (camera.rotation.y < 0) camera.rotation.y += 2 * Math.PI;
+        myTank.rotation_box.y = myTank.rotation_box.y % (2 * Math.PI);
+        if (myTank.rotation_box.y < 0) myTank.rotation_box.y += 2 * Math.PI;
         if ((e && e.keyCode == 87) || (e && e.keyCode == 83)) { // 按 W(前进) 按 S(后退)
             if (e && e.keyCode == 87) {
                 this.isWDown = true;
@@ -42,20 +47,20 @@ PlayControl.prototype.run = function () {
                 }
             }
             //先转向再移动
-            if (Math.abs(game.camera.rotation.y - game.tankControl.myTank.rotation_box.y) < 0.09) {
-                game.tankControl.myTank.rotationFlag = 0;
-                game.camera.speed = game.tankControl.myTank.moveSpeed;
+            if (Math.abs(camera.rotation.y - myTank.rotation_box.y) < 0.09) {
+                myTank.rotationFlag = 0;
+                camera.speed = myTank.moveSpeed;
             } else {
-                game.camera.speed = 0;
-                var a = game.camera.rotation.y - game.tankControl.myTank.rotation_box.y;
-                var b = game.tankControl.myTank.rotation_box.y - game.camera.rotation.y;
+                camera.speed = 0;
+                var a = camera.rotation.y - myTank.rotation_box.y;
+                var b = myTank.rotation_box.y - camera.rotation.y;
                 if ((a > 0 && a <= Math.PI) || (b > 0 && b >= Math.PI)) {
-                    game.tankControl.myTank.rotationFlag = 1;
+                    myTank.rotationFlag = 1;
                 } else {
-                    game.tankControl.myTank.rotationFlag = -1;
+                    myTank.rotationFlag = -1;
                 }
             }
-            game.soundControl.tankMoveSound(true);
+            soundControl.tankMoveSound(true);
             return;
         }
 
@@ -68,11 +73,11 @@ PlayControl.prototype.run = function () {
                     moveStop();
                     return;
                 }
-                target = game.camera.rotation.y - Math.PI / 2;
+                target = camera.rotation.y - Math.PI / 2;
                 if (target < 0) target += 2 * Math.PI;
                 //寻找最快的转向达到平行位置
-                var a = game.tankControl.myTank.rotation_box.y - target;
-                var b = target - game.tankControl.myTank.rotation_box.y;
+                var a = myTank.rotation_box.y - target;
+                var b = target - myTank.rotation_box.y;
                 if ((a > Math.PI / 2 && a < 3 * Math.PI / 2) || (b > Math.PI / 2 && b < 3 * Math.PI / 2)) {
                     target -= Math.PI;
                     if (target < 0) target += 2 * Math.PI;
@@ -83,41 +88,46 @@ PlayControl.prototype.run = function () {
                     moveStop();
                     return;
                 }
-                target = game.camera.rotation.y + Math.PI / 2;
+                target = camera.rotation.y + Math.PI / 2;
                 if (target > 2 * Math.PI) target -= 2 * Math.PI;
                 //寻找最快的转向达到平行位置
-                var a = game.tankControl.myTank.rotation_box.y - target;
-                var b = target - game.tankControl.myTank.rotation_box.y;
+                var a = myTank.rotation_box.y - target;
+                var b = target - myTank.rotation_box.y;
                 if ((a > Math.PI / 2 && a < 3 * Math.PI / 2) || (b > Math.PI / 2 && b < 3 * Math.PI / 2)) {
                     target -= Math.PI;
                     if (target < 0) target += 2 * Math.PI;
                 }
             }
             //先转向再移动
-            if (Math.abs(target - game.tankControl.myTank.rotation_box.y) < 0.09) {
-                game.tankControl.myTank.rotationFlag = 0;
-                game.camera.speed = game.tankControl.myTank.moveSpeed;
+            if (Math.abs(target - myTank.rotation_box.y) < 0.09) {
+                myTank.rotationFlag = 0;
+                camera.speed = myTank.moveSpeed;
             } else {
-                game.camera.speed = 0;
-                var a = target - game.tankControl.myTank.rotation_box.y;
-                var b = game.tankControl.myTank.rotation_box.y - target;
+                camera.speed = 0;
+                var a = target - myTank.rotation_box.y;
+                var b = myTank.rotation_box.y - target;
                 if ((a > 0 && a <= Math.PI) || (b > 0 && b >= Math.PI)) {
-                    game.tankControl.myTank.rotationFlag = 1;
+                    myTank.rotationFlag = 1;
                 } else {
-                    game.tankControl.myTank.rotationFlag = -1;
+                    myTank.rotationFlag = -1;
                 }
             }
-            game.soundControl.tankMoveSound(true);
+            soundControl.tankMoveSound(true);
             return;
         }
 
         if (e && e.keyCode == 32) { // 按 空格(发射)
-            game.soundControl.tankFireSound();
+            soundControl.tankFireSound();
         }
     };
 
     document.onkeyup = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
+        if (e && e.keyCode == 88) { // 按 X
+            infoControl.hideUserList();
+        }
+        //位于死亡视角不能进行其他操作
+        if (!myTank.live) return;
         if ((e && e.keyCode == 87) || (e && e.keyCode == 83) || (e && e.keyCode == 65) || (e && e.keyCode == 68)) {
             if (e && e.keyCode == 87) this.isWDown = false;
             else if (e && e.keyCode == 83) this.isSDown = false;
@@ -128,9 +138,4 @@ PlayControl.prototype.run = function () {
         if (e && e.keyCode == 32) { // 按 空格(发射)
         }
     }
-}
-//控制终止
-PlayControl.prototype.stop = function () {
-    document.onkeydown = null;
-    document.onkeyup = null;
 }
