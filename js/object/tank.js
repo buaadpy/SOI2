@@ -86,6 +86,7 @@ Tank.prototype.create = function (user, camp, position, type, scene) {
         _this.object_gun.position = position;
     };
     try {
+        loader.useDefaultLoadingScreen = false;
         loader.load();
     } catch (e) {
         console.log('游戏错误:' + e);

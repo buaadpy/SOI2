@@ -25,15 +25,20 @@ MapControl.prototype.createMap = function (scene) {
     ground.material = groundMaterial;
     ground.checkCollisions = true;
     //加载水
-    var extraGround = BABYLON.Mesh.CreateGround('extraGround', 2000, 2000, 1, scene, false);
-    var extraGroundMaterial = new BABYLON.StandardMaterial('extraGround', scene);
-    extraGroundMaterial.diffuseTexture = new BABYLON.Texture('../asset/image/water.jpg', scene);
-    extraGroundMaterial.diffuseTexture.uScale = 60;
-    extraGroundMaterial.diffuseTexture.vScale = 60;
-    extraGround.position.y = 2;
-    extraGround.material = extraGroundMaterial;
+    var waterMesh = BABYLON.Mesh.CreateGround("waterMesh", 2000, 2000, 1, scene, false);
+    var water = new BABYLON.WaterMaterial("water", scene);
+    water.bumpTexture = new BABYLON.Texture("../asset/image/waterbump.png", scene);
+    water.windForce = 0.7;
+    water.waveHeight = 0.5;
+    water.windDirection = new BABYLON.Vector2(1, 1);
+    water.waterColor = new BABYLON.Color3(0.0, 0.3, 0.6);
+    water.colorBlendFactor = 0.3;
+    water.bumpHeight = 0.1;
+    water.waveLength = 0.2;
+    water.addToRenderList(skybox);
+    waterMesh.material = water;
+    waterMesh.position.y = 0;
 }
 //丰富地图
 MapControl.prototype.richMap = function () {
-
 }

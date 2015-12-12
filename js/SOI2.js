@@ -34,6 +34,7 @@ SOI2.prototype.init = function () {
     //加载游戏引擎
     this.canvas = document.getElementById('gameCanvas');
     this.engine = new BABYLON.Engine(this.canvas, true);
+    this.engine.loadingUIText = '正在进入钢铁之魂2战场……';
     this.engine.displayLoadingUI();
     setTimeout(function () {
         game.engine.hideLoadingUI();

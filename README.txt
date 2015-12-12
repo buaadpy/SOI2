@@ -7,7 +7,7 @@ Contributors: CrazySssst, MCJohn117
 
 0.学习资料
 http://doc.babylonjs.com/
-采用babylonjs v2.1版本
+采用babylonjs v2.3.0-alpha版本
 
 1.工程结构说明
 asset  游戏资源
