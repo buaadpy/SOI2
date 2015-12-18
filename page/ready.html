@@ -5,7 +5,7 @@
     <script src="../lib/av-mini-0.5.5.js"></script>
     <audio src="../asset/music/bg_ready.mp3" autoplay="autoplay" loop="loop"></audio>
 </head>
-<body style="background: url(../asset/image/bg_ready.jpg); background-repeat:no-repeat;">
+<body style="background: url(../asset/image/bg_ready.jpg); background-repeat:no-repeat; background-size: 100% 100%;">
 <!--欢迎词-->
 <div style="position:absolute;top:30%;left:50%;margin:-30px 0 0 -150px;width:300px;height:60px;">
     <strong id="user" style="color:#ffffff; font-size:20px;"></strong><br>
@@ -14,11 +14,11 @@
 <!--坦克选择-->
 <div style="position:absolute;top:62%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
     <h3 style="color:#ffffff; font-size:17px;">请您选择坦克类型:</h3>
-    <input type="radio" name="tank" value="tankA" id="tankA" disabled="disabled"/>
+    <input type="radio" name="tank" value="tankA" id="tankA"/>
     <label for="tankA" style="color:#ffffff">侦察战车</label>
     <input type="radio" name="tank" value="tankB" id="tankB" checked="checked"/>
     <label for="tankB" style="color:#ffffff">重型坦克</label>
-    <input type="radio" name="tank" value="tankC" id="tankC" disabled="disabled"/>
+    <input type="radio" name="tank" value="tankC" id="tankC"/>
     <label for="tankC" style="color:#ffffff">自行火炮</label>
 </div>
 <!--房间选择-->
@@ -33,6 +33,7 @@
            style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;cursor: pointer;"/>
 </div>
 <script type="text/javascript">
+    document.getElementsByTagName('body')[0].style.height = window.innerHeight + 'px';
     var username = window.location.search;
     username = username.substring(username.indexOf('?') + 1, username.length);
     window.sessionStorage.setItem("username", username);

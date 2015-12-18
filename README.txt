@@ -1,4 +1,4 @@
-# SOI2
+SOI2
 钢铁之魂2 (by babylon.js & node.js)
 Licensed under the MIT license
 

@@ -7,6 +7,7 @@
 CommControl = function () {
     this.socket = null;//通信实体
 }
+
 //建立与服务器的通信
 CommControl.prototype.run = function (call) {
     //连接websocket后端服务器
@@ -30,6 +31,7 @@ CommControl.prototype.run = function (call) {
                 }
                 call();
             } else {
+                //提示玩家登陆
                 if (o.onlineCount % 2 == 1) {
                     o.camp = 'R';
                 } else {
@@ -52,31 +54,48 @@ CommControl.prototype.run = function (call) {
         console.log('玩家' + o.clientId + '离开战场');
     });
 
-    //监听消息发送
+    //监听消息
     this.socket.on('message', function (obj) {
+        //游戏结束指令
         if (obj.command == 'gameOver') {
             game.gameover(obj.data);
         }
+        //炮弹爆炸指令
+        if (obj.command == 'shellBomb') {
+            for (var i = 0; i < obj.data.length; i++) {
+                try {
+                    var position = game.shellControl.shellList[game.shellControl.searchIndex(obj.data[i])].position;
+                    game.particleControl.bomb(position);
+                    game.shellControl.delete(obj.data[i]);
+                    game.soundControl.bombSound(position, game.tankControl.myTank.position);
+                } catch (e) {
+                }
+            }
+        }
         if (!game.isHost && obj.from == 'Server') {
+            //客户端更新坦克与炮弹数据
             if (obj.command == 'updateTank') {
-                game.tankControl.clientUpdate(obj.data, game.scene);
+                game.tankControl.clientUpdate(obj.data, game.infoControl);
             }
             if (obj.command == 'updateShell') {
                 game.shellControl.clientUpdate(obj.data);
             }
         }
         if (game.isHost && obj.to == 'Server') {
+            //新建坦克指令
             if (obj.command == 'newTank') {
                 var md = obj.data;
-                game.tankControl.addTank(md.user, md.camp, md.position, md.type, game.scene);
+                game.tankControl.addTank(md.user, md.camp, md.position, md.type);
                 console.log('服务器为新玩家' + md.user + '创建坦克');
             }
+            //更新单一坦克指令
             if (obj.command == 'sendTankInfo') {
                 game.tankControl.updateTankInfo(obj.from, obj.data);
             }
+            //开炮指令
             if (obj.command == 'newShell') {
                 var md = obj.data;
-                game.shellControl.addShell(md.position, md.direction, md.speed, md.damage, game.scene);
+                game.shellControl.addShell(md);
             }
         }
     });

@@ -6,6 +6,7 @@
 //管理信息面板显示
 InfoControl = function () {
 }
+
 //更新面板信息
 InfoControl.prototype.updateInfoPanel = function (tank) {
     if (tank.live) {
@@ -20,7 +21,6 @@ InfoControl.prototype.updateInfoPanel = function (tank) {
         document.getElementById('info_height').innerHTML = '';
     }
 }
-
 //创造小地图
 InfoControl.prototype.showSmallMap = function () {
     var map = document.getElementById('smallMap');
@@ -33,7 +33,6 @@ InfoControl.prototype.showSmallMap = function () {
 //更新小地图
 InfoControl.prototype.updateSmallMap = function (tankList) {
 }
-
 //提示阵亡
 InfoControl.prototype.death = function () {
     document.getElementById('tip_info').innerHTML = '[——坦克已被击退——]';
@@ -50,6 +49,7 @@ InfoControl.prototype.swim = function () {
 }
 //提示遭受攻击
 InfoControl.prototype.beAttack = function () {
+    if (document.getElementById('tip_info').innerHTML == '警告：坦克正在进水受损！') return;
     document.getElementById('tip_info').innerHTML = '警告：坦克遭受火力攻击！';
     setTimeout(function () {
         document.getElementById('tip_info').innerHTML = '';
@@ -76,8 +76,7 @@ InfoControl.prototype.showWinner = function (result) {
     document.getElementById('tip_info').style.color = '#FFD700';
     document.getElementById('tip_info').innerHTML = '[' + result + '赢得战斗胜利]';
 }
-
-//更新所有用户信息
+//更新战场信息表
 InfoControl.prototype.updateList = function (tanks) {
     var redtable = document.getElementById('redtable');
     var bluetable = document.getElementById('bluetable');
@@ -90,8 +89,8 @@ InfoControl.prototype.updateList = function (tanks) {
     var redcount = 0;
     var bluecount = 0;
     for (var i = 0; i < tanks.length; i++) {
+        //每辆坦克的信息显示为一行
         var row = document.createElement('tr');
-
         var cell = document.createElement('td');
         cell.style.width = '250px';
         cell.style.paddingLeft = '5px';
@@ -115,7 +114,7 @@ InfoControl.prototype.updateList = function (tanks) {
         else
             cell.innerText = '自行火炮';
         row.appendChild(cell);
-
+        //分两栏显示
         if (tanks[i].camp == 'R') {
             redtable.appendChild(row);
             redcount++;
@@ -128,7 +127,7 @@ InfoControl.prototype.updateList = function (tanks) {
     document.getElementById('redcount').innerText = redcount;
     document.getElementById('bluecount').innerText = bluecount;
 }
-//显示战场信息
+//显示战场信息表
 InfoControl.prototype.showUserList = function (tankList) {
     var datadiv = document.getElementById('datadiv');
     if (datadiv.style.visibility != 'visible') {
@@ -138,7 +137,7 @@ InfoControl.prototype.showUserList = function (tankList) {
             document.getElementById('gunsight').style.visibility = 'hidden';
     }
 }
-//隐藏战场信息
+//隐藏战场信息表
 InfoControl.prototype.hideUserList = function () {
     var datadiv = document.getElementById('datadiv');
     if (datadiv.style.visibility == 'visible') {

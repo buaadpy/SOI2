@@ -39,6 +39,8 @@ SoundControl.prototype.tankFireSound = function () {
     this.tankFire.play();
 }
 //炮弹爆炸音效
-SoundControl.prototype.bombSound = function () {
-    this.bomb.play();
+SoundControl.prototype.bombSound = function (a, b) {
+    //150码内能听到声音
+    if (Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z)) <= 150)
+        this.bomb.play();
 }

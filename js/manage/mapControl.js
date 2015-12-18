@@ -5,29 +5,30 @@
 
 //地图管理
 MapControl = function () {
+    this.gamescene = null;//连接游戏场景
 }
 
 //创造地图
-MapControl.prototype.createMap = function (scene) {
+MapControl.prototype.createMap = function () {
     //加载天空盒
-    var skybox = BABYLON.Mesh.CreateBox('skyBox', 2000.0, scene);
-    var skyboxMaterial = new BABYLON.StandardMaterial('skyBox', scene);
+    var skybox = BABYLON.Mesh.CreateBox('skyBox', 2000.0, this.gamescene);
+    var skyboxMaterial = new BABYLON.StandardMaterial('skyBox', this.gamescene);
     skyboxMaterial.backFaceCulling = false;
-    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('../asset/image/skybox/skybox', scene);
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('../asset/image/skybox/skybox', this.gamescene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
     skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
     skybox.material = skyboxMaterial;
     //加载岛屿
-    var groundMaterial = new BABYLON.StandardMaterial('ground', scene);
-    groundMaterial.diffuseTexture = new BABYLON.Texture('../asset/image/island.jpg', scene);
-    var ground = BABYLON.Mesh.CreateGroundFromHeightMap('ground', '../asset/image/island_height.jpg', 1200, 1200, 300, 0, 35, scene, false);
+    var groundMaterial = new BABYLON.StandardMaterial('ground', this.gamescene);
+    groundMaterial.diffuseTexture = new BABYLON.Texture('../asset/image/island.jpg', this.gamescene);
+    var ground = BABYLON.Mesh.CreateGroundFromHeightMap('ground', '../asset/image/island_height.jpg', 1200, 1200, 300, 0, 35, this.gamescene, false);
     ground.material = groundMaterial;
     ground.checkCollisions = true;
     //加载水
-    var waterMesh = BABYLON.Mesh.CreateGround("waterMesh", 2000, 2000, 1, scene, false);
-    var water = new BABYLON.WaterMaterial("water", scene);
-    water.bumpTexture = new BABYLON.Texture("../asset/image/waterbump.png", scene);
+    var waterMesh = BABYLON.Mesh.CreateGround('waterMesh', 2000, 2000, 1, this.gamescene, false);
+    var water = new BABYLON.WaterMaterial('water', this.gamescene);
+    water.bumpTexture = new BABYLON.Texture('../asset/image/waterbump.png', this.gamescene);
     water.windForce = 0.7;
     water.waveHeight = 0.5;
     water.windDirection = new BABYLON.Vector2(1, 1);

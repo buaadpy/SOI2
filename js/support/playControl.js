@@ -9,10 +9,12 @@ PlayControl = function () {
     this.isSDown = false;//S按下
     this.isADown = false;//A按下
     this.isDDown = false;//D按下
+    this.isShoot = false;//是否发射
 }
 
 //设定指令
 PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, infoControl) {
+    var _this = this;
     //移动停止
     var moveStop = function () {
         camera.speed = 0;
@@ -22,9 +24,12 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
 
     document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
-        if (e && e.keyCode == 88) { // 按 X
+
+        // 按 X 显示战场信息
+        if (e && e.keyCode == 88) {
             infoControl.showUserList(tankList);
         }
+
         //位于死亡视角不能进行其他操作
         if (!myTank.live) return;
         //角度归一化
@@ -32,16 +37,18 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
         if (camera.rotation.y < 0) camera.rotation.y += 2 * Math.PI;
         myTank.rotation_box.y = myTank.rotation_box.y % (2 * Math.PI);
         if (myTank.rotation_box.y < 0) myTank.rotation_box.y += 2 * Math.PI;
-        if ((e && e.keyCode == 87) || (e && e.keyCode == 83)) { // 按 W(前进) 按 S(后退)
+        // 按 W(前进) 按 S(后退)
+        if ((e && e.keyCode == 87) || (e && e.keyCode == 83)) {
             if (e && e.keyCode == 87) {
-                this.isWDown = true;
-                if (this.isSDown || this.isADown || this.isDDown) {
+                _this.isWDown = true;
+                //玩家按了多个键则停止移动
+                if (_this.isSDown || _this.isADown || _this.isDDown) {
                     moveStop();
                     return;
                 }
             } else {
-                this.isSDown = true;
-                if (this.isWDown || this.isADown || this.isDDown) {
+                _this.isSDown = true;
+                if (_this.isWDown || _this.isADown || _this.isDDown) {
                     moveStop();
                     return;
                 }
@@ -64,12 +71,13 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
             return;
         }
 
-        if ((e && e.keyCode == 65) || (e && e.keyCode == 68)) { // 按 A(左转) 按 D(右转)
+        // 按 A(左转) 按 D(右转)
+        if ((e && e.keyCode == 65) || (e && e.keyCode == 68)) {
             var target;
             //计算最终转向
             if (e && e.keyCode == 65) {
-                this.isADown = true;
-                if (this.isSDown || this.isWDown || this.isDDown) {
+                _this.isADown = true;
+                if (_this.isSDown || _this.isWDown || _this.isDDown) {
                     moveStop();
                     return;
                 }
@@ -83,8 +91,8 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
                     if (target < 0) target += 2 * Math.PI;
                 }
             } else {
-                this.isDDown = true;
-                if (this.isSDown || this.isADown || this.isWDown) {
+                _this.isDDown = true;
+                if (_this.isSDown || _this.isADown || _this.isWDown) {
                     moveStop();
                     return;
                 }
@@ -116,26 +124,37 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
             return;
         }
 
-        if (e && e.keyCode == 32) { // 按 空格(发射)
-            soundControl.tankFireSound();
+        // 按 空格(发射)
+        if (e && e.keyCode == 32) {
+            if (!myTank.inColding) {
+                soundControl.tankFireSound();
+                myTank.inColding = true;
+                _this.isShoot = true;
+                //设置冷却时间
+                setTimeout(function () {
+                    myTank.inColding = false;
+                }, myTank.coldTime);
+            }
         }
     };
 
     document.onkeyup = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
-        if (e && e.keyCode == 88) { // 按 X
+
+        // 按 X
+        if (e && e.keyCode == 88) {
             infoControl.hideUserList();
         }
+
         //位于死亡视角不能进行其他操作
         if (!myTank.live) return;
+
         if ((e && e.keyCode == 87) || (e && e.keyCode == 83) || (e && e.keyCode == 65) || (e && e.keyCode == 68)) {
-            if (e && e.keyCode == 87) this.isWDown = false;
-            else if (e && e.keyCode == 83) this.isSDown = false;
-            else if (e && e.keyCode == 65) this.isADown = false;
-            else this.isDDown = false;
+            if (e && e.keyCode == 87) _this.isWDown = false;
+            else if (e && e.keyCode == 83) _this.isSDown = false;
+            else if (e && e.keyCode == 65) _this.isADown = false;
+            else _this.isDDown = false;
             moveStop();
-        }
-        if (e && e.keyCode == 32) { // 按 空格(发射)
         }
     }
 }

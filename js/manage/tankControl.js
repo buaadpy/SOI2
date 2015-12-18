@@ -5,6 +5,7 @@
 
 //坦克管理
 TankControl = function () {
+    this.gamescene = null;//连接游戏场景
     this.myTank = null;//本机坦克
     this.tankList = [];//坦克列表
     this.playerNumber = 0;//玩家人数
@@ -15,9 +16,9 @@ TankControl = function () {
 }
 
 //添加坦克
-TankControl.prototype.addTank = function (user, camp, position, type, scene) {
+TankControl.prototype.addTank = function (user, camp, position, type) {
     var tank = new Tank();
-    tank.create(user, camp, position, type, scene);
+    tank.create(user, camp, position, type, this.gamescene);
     this.tankList.push(tank);
     this.playerNumber++;
     if (camp == 'R') {
@@ -30,6 +31,7 @@ TankControl.prototype.addTank = function (user, camp, position, type, scene) {
 //移动玩家坦克
 TankControl.prototype.myTankMove = function (camera, infoControl) {
     if (!this.myTank.live) {
+        //开启死亡视角
         if (!this.deathView) {
             var t = document.getElementById('gunsight');
             t.parentNode.removeChild(t);
@@ -47,7 +49,9 @@ TankControl.prototype.myTankMove = function (camera, infoControl) {
         this.myTank.position.x = camera.position.x;
         this.myTank.position.y = camera.position.y - 3.5;
         this.myTank.position.z = camera.position.z;
-        this.myTank.rotation_gun = camera.rotation;
+        this.myTank.rotation_gun.x = camera.rotation.x;
+        this.myTank.rotation_gun.y = camera.rotation.y;
+        this.myTank.rotation_gun.z = camera.rotation.z;
         //控制旋转，随机数作为抖动因子模拟移动的颠簸
         this.myTank.rotation_box.y += this.myTank.rotationFlag * this.myTank.boxRotateSpeed * (Math.random());
         //坦克入水
@@ -107,10 +111,13 @@ TankControl.prototype.serverUpdate = function () {
     }
 }
 //客户端更新数据
-TankControl.prototype.clientUpdate = function (data, scene) {
+TankControl.prototype.clientUpdate = function (data, infoControl) {
     for (var i = 0; i < data.length; i++) {
         try {
+            //对于移动数据使用本地数据为基准，不用与服务器同步
             if (data[i].user == this.myTank.user) {
+                if (this.tankList[i].life != data[i].life)
+                    infoControl.beAttack();
                 this.tankList[i].live = data[i].live;
                 this.tankList[i].life = data[i].life;
                 continue;
@@ -118,6 +125,7 @@ TankControl.prototype.clientUpdate = function (data, scene) {
         } catch (e) {
         }
         var flag = false;
+        //更新数据
         for (var j = 0; j < this.tankList.length; j++) {
             if (data[i].user == this.tankList[j].user) {
                 this.tankList[j].position = data[i].position;
@@ -130,33 +138,22 @@ TankControl.prototype.clientUpdate = function (data, scene) {
             }
         }
         if (!flag) {
-            console.log('客户端接收到坦克' + data[i].user);
-            this.addTank(data[i].user, data[i].camp, data[i].position, data[i].type, scene);
+            console.log('客户端接收到新坦克' + data[i].user);
+            this.addTank(data[i].user, data[i].camp, data[i].position, data[i].type);
         }
     }
 }
 //绘制坦克新的位置
-TankControl.prototype.draw = function (scene) {
+TankControl.prototype.draw = function () {
     for (var i = 0; i < this.tankList.length; i++) {
-        //阵亡坦克移除箭头指示
         if (!this.tankList[i].live) {
             if (this.tankList[i].mark != null) {
-                scene.removeMesh(this.tankList[i].mark);
+                this.gamescene.removeMesh(this.tankList[i].mark);
                 this.tankList[i].mark = null;
             }
             return;
-        }
-        //当坦克模型加载完成才能开始修改位置
-        if (this.tankList[i].object_box != null) {
-            this.tankList[i].object_box.position = this.tankList[i].position;
-            this.tankList[i].object_gun.position = this.tankList[i].position;
-            this.tankList[i].object_box.rotation = this.tankList[i].rotation_box;
-            this.tankList[i].object_gun.rotation = this.tankList[i].rotation_gun;
-        }
-        //更新指示物位置
-        this.tankList[i].mark.position.x = this.tankList[i].position.x;
-        this.tankList[i].mark.position.y = this.tankList[i].position.y + 30;
-        this.tankList[i].mark.position.z = this.tankList[i].position.z;
+        } else
+            this.tankList[i].draw();
     }
 }
 //获取游戏胜利方
