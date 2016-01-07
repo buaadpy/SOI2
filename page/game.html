@@ -2,16 +2,19 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>SOI2</title>
+    <title>钢铁之魂2 SOI2</title>
 
     <link rel="stylesheet" type="text/css" href="../css/game.css">
     <link rel="stylesheet" type="text/css" href="../css/list.css">
 
-    <script src="../lib/babylon.js"></script>
-    <script src="../lib/babylon.objFileLoader.js"></script>
-    <script src="../lib/babylon.waterMaterial.js"></script>
-    <script src="../lib/av-mini-0.5.5.js"></script>
-    <script src="http://192.168.1.19:8000/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="../lib/babylon.js"></script>
+    <script type="text/javascript" src="../lib/babylon.objFileLoader.js"></script>
+    <script type="text/javascript" src="../lib/babylon.waterMaterial.js"></script>
+    <script type="text/javascript" src="../lib/av-mini-0.5.5.js"></script>
+    <script type="text/javascript" src="../lib/jquery-1.4.min.js"></script>
+    <script type="text/javascript" src="http://172.22.132.146:8000/socket.io/socket.io.js"></script>
+
+    <script type="text/javascript" src="../lib/stats.js"></script>
 </head>
 <body>
 <!--游戏绘制区域-->
@@ -21,11 +24,12 @@
 <!--信息面板-->
 <label id="tip_info" style="font-family: 'Microsoft YaHei';color:#ff0000; font-size:30px;height:50px"></label>
 <!--状态面板-->
-<div id="tank_info">
+<div id="tank_info" style="background-color: rgba(255, 255, 255, 0.2); width:200px; height:140px;">
     <label id="info_name" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br><br>
     <label id="info_life" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
     <label id="info_position" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
-    <label id="info_height" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label>
+    <label id="info_height" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
+    <label id="info_colding" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label>
 </div>
 <!--小地图-->
 <div id="smallMap"></div>
@@ -47,22 +51,36 @@
     </div>
     <table id="bluetable" class="fontset bluecamp tableset"></table>
 </div>
+<!--fps统计-->
+<div id="Stats-output"></div>
 
-<script src="../js/SOI2.js"></script>
-<script src="../js/object/shell.js"></script>
-<script src="../js/object/tank.js"></script>
-<script src="../js/manage/infoControl.js"></script>
-<script src="../js/manage/mapControl.js"></script>
-<script src="../js/manage/shellControl.js"></script>
-<script src="../js/manage/tankControl.js"></script>
-<script src="../js/support/commControl.js"></script>
-<script src="../js/manage/particleControl.js"></script>
-<script src="../js/support/playControl.js"></script>
-<script src="../js/support/soundControl.js"></script>
+<script type="text/javascript" src="../js/SOI2.js"></script>
+<script type="text/javascript" src="../js/object/shell.js"></script>
+<script type="text/javascript" src="../js/object/tank.js"></script>
+<script type="text/javascript" src="../js/manage/infoControl.js"></script>
+<script type="text/javascript" src="../js/manage/mapControl.js"></script>
+<script type="text/javascript" src="../js/manage/shellControl.js"></script>
+<script type="text/javascript" src="../js/manage/tankControl.js"></script>
+<script type="text/javascript" src="../js/support/commControl.js"></script>
+<script type="text/javascript" src="../js/manage/particleControl.js"></script>
+<script type="text/javascript" src="../js/support/playControl.js"></script>
+<script type="text/javascript" src="../js/support/soundControl.js"></script>
 <script>
     var game = new SOI2();
-    var server = "http://192.168.1.19:8000";
+    var server = "http://172.22.132.146:8000";
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
+
+    //设置fps统计窗
+    function initStats(){
+        var stats = new Stats();
+        stats.setMode(0);
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        document.getElementById('Stats-output').appendChild(stats.domElement);
+        return stats;
+    }
+    var stats = initStats();
 
     //游戏启动点
     document.addEventListener("DOMContentLoaded", function () {

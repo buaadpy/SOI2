@@ -33,8 +33,7 @@ TankControl.prototype.myTankMove = function (camera, infoControl) {
     if (!this.myTank.live) {
         //开启死亡视角
         if (!this.deathView) {
-            var t = document.getElementById('gunsight');
-            t.parentNode.removeChild(t);
+            $('#gunsight').css('visibility', 'hidden');
             camera.applyGravity = false;
             camera.speed = 40;
             camera.position = new BABYLON.Vector3(0, 50, 0);
@@ -146,14 +145,9 @@ TankControl.prototype.clientUpdate = function (data, infoControl) {
 //绘制坦克新的位置
 TankControl.prototype.draw = function () {
     for (var i = 0; i < this.tankList.length; i++) {
-        if (!this.tankList[i].live) {
-            if (this.tankList[i].mark != null) {
-                this.gamescene.removeMesh(this.tankList[i].mark);
-                this.tankList[i].mark = null;
-            }
-            return;
-        } else
+        if (this.tankList[i].live) {
             this.tankList[i].draw();
+        }
     }
 }
 //获取游戏胜利方

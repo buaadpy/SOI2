@@ -24,8 +24,8 @@ html, body {
 
 #tank_info {
     position:absolute;
-    top:80%;
-    right:2%;
+    bottom:1%;
+    right:1%;
 }
 
 #tip_info {
@@ -36,6 +36,6 @@ html, body {
 
 #smallMap {
     position:absolute;
-    top:75%;
+    bottom:1%;
     left:1%;
 }

@@ -132,7 +132,7 @@ SOI2.prototype.update = function () {
         this.tankControl.myTankMove(this.camera, this.infoControl);
         //更新显示数据
         this.infoControl.updateInfoPanel(this.tankControl.myTank);
-        this.infoControl.updateSmallMap(this.tankControl.tankList);
+        this.infoControl.updateSmallMap(this.tankControl.myTank, this.tankControl.tankList);
         //炮弹飞行
         var bombId = this.shellControl.fly(this.tankControl.tankList, this.userName, this.infoControl);
         if (bombId.length != 0)
@@ -159,7 +159,7 @@ SOI2.prototype.update = function () {
         this.tankControl.myTankMove(this.camera, this.infoControl);
         //更新显示数据
         this.infoControl.updateInfoPanel(this.tankControl.myTank);
-        this.infoControl.updateSmallMap(this.tankControl.tankList);
+        this.infoControl.updateSmallMap(this.tankControl.myTank, this.tankControl.tankList);
         //采用60Hz的同步频率
         this.commControl.send('Server', this.userName, 'sendTankInfo', this.tankControl.getTankData());
     }
@@ -170,6 +170,7 @@ SOI2.prototype.draw = function () {
     this.tankControl.draw();
     this.shellControl.draw();
     this.scene.render();
+    stats.update();
 }
 
 //游戏结束

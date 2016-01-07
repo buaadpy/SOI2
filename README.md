@@ -1,8 +1,8 @@
-SOI2
+#SOI2
 钢铁之魂2 (by babylon.js & node.js)
 Licensed under the MIT license
 
-Copyright © 2015 buaadpy. All Rights Reserved
+Copyright © 2015-2016 buaadpy. All Rights Reserved
 Contributors: CrazySssst, MCJohn117
 
 0.学习资料
