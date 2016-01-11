@@ -85,7 +85,7 @@ InfoControl.prototype.death = function () {
     $('#tip_info').text('[——坦克已被击退——]');
     setTimeout(function () {
         $('#tip_info').text('[——坦克已被击退——]');
-    }, '1000');
+    }, '3000');
 }
 //提示坦克泡水
 InfoControl.prototype.swim = function () {
@@ -185,11 +185,11 @@ InfoControl.prototype.showUserList = function (tankList) {
     }
 }
 //隐藏战场信息表
-InfoControl.prototype.hideUserList = function () {
+InfoControl.prototype.hideUserList = function (live) {
     var datadiv = document.getElementById('datadiv');
     if (datadiv.style.visibility == 'visible') {
         datadiv.style.visibility = 'hidden';
-        if (document.getElementById('gunsight') != null)
+        if (document.getElementById('gunsight') != null && live)
             $('#gunsight').css('visibility', 'visible');
     }
 }

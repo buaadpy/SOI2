@@ -21,26 +21,36 @@ CommControl.prototype.run = function (call) {
 
     //监听新用户登录
     this.socket.on('login', function (o) {
-            console.log('玩家' + o.clientId + '加入战场');
-            //检测到自己登陆成功
-            if (game.userCamp == null) {
-                if (o.onlineCount % 2 == 1) {
-                    game.userCamp = 'R';
-                } else {
-                    game.userCamp = 'B';
-                }
+            if (game.isHost) {
+                if (game.userCamp != null)
+                    console.log('玩家' + o.clientId + '加入战场');
+                game.userCamp = 'N';
                 call();
             } else {
-                //提示玩家登陆
-                if (o.onlineCount % 2 == 1) {
-                    o.camp = 'R';
-                } else {
-                    o.camp = 'B';
+                if (o.onlineCount <= 1) {
+                    alert('管理员打扫战场中，请等待战场开启');
+                    window.location.href = 'ready.html';
                 }
-                if (o.camp == game.userCamp) {
-                    game.infoControl.friendJoin();
+                //检测到自己登陆成功
+                if (game.userCamp == null) {
+                    if (o.onlineCount % 2 == 0) {
+                        game.userCamp = 'R';
+                    } else {
+                        game.userCamp = 'B';
+                    }
+                    call();
                 } else {
-                    game.infoControl.enemyJoin();
+                    //提示玩家登陆
+                    if (o.onlineCount % 2 == 0) {
+                        o.camp = 'R';
+                    } else {
+                        o.camp = 'B';
+                    }
+                    if (o.camp == game.userCamp) {
+                        game.infoControl.friendJoin();
+                    } else {
+                        game.infoControl.enemyJoin();
+                    }
                 }
             }
         }

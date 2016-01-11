@@ -24,6 +24,7 @@ Tank = function () {
     this.protectDamage = 0;//防御减伤
     this.coldTime = 0;//冷却时间
     this.inColding = false;//是否在冷却中
+    this.cameraOffset = 0;//相机偏移量
 }
 
 //创造坦克
@@ -39,31 +40,34 @@ Tank.prototype.create = function (user, camp, position, type, scene) {
         this.attackDamage = 30;//攻击伤害
         this.shellSpeed = 7;//炮弹速度
         this.gunRotateSpeed = 4000;//炮台旋转速度
-        this.boxRotateSpeed = 0.04;//车身旋转速度
-        this.moveSpeed = 10;//坦克速度
+        this.boxRotateSpeed = 0.07;//车身旋转速度
+        this.moveSpeed = 8;//坦克速度
         this.protectDamage = 5;//防御减伤
         this.coldTime = 2700;//冷却时间
+        this.cameraOffset = 3.1;//相机偏移量
     } else if (this.type == 'tankB') {//重型坦克
         this.attackDamage = 40;//攻击伤害
         this.shellSpeed = 9;//炮弹速度
         this.gunRotateSpeed = 4800;//炮台旋转速度
-        this.boxRotateSpeed = 0.03;//车身旋转速度
-        this.moveSpeed = 8;//坦克速度
+        this.boxRotateSpeed = 0.06;//车身旋转速度
+        this.moveSpeed = 6;//坦克速度
         this.protectDamage = 10;//防御减伤
         this.coldTime = 4000;//冷却时间
+        this.cameraOffset = 2.2;//相机偏移量
     } else {//自行火炮
         this.attackDamage = 60;//攻击伤害
         this.shellSpeed = 13;//炮弹速度
         this.gunRotateSpeed = 5500;//炮台旋转速度
-        this.boxRotateSpeed = 0.02;//车身旋转速度
-        this.moveSpeed = 7;//坦克速度
+        this.boxRotateSpeed = 0.05;//车身旋转速度
+        this.moveSpeed = 5;//坦克速度
         this.protectDamage = 5;//防御减伤
         this.coldTime = 5200;//冷却时间
+        this.cameraOffset = 3;//相机偏移量
     }
     //加载坦克模型
     var loader = new BABYLON.AssetsManager(scene);
     var _this = this;
-    var loadTank = loader.addMeshTask(this.user, ['tank', 'gun'], '../asset/model/', 'testTank.obj');
+    var loadTank = loader.addMeshTask(this.user, ['tank', 'gun'], '../asset/model/', this.type + '.obj');
     loadTank.onSuccess = function () {
         if (loadTank.loadedMeshes[0].name == 'gun') {
             _this.object_box = loadTank.loadedMeshes[1];

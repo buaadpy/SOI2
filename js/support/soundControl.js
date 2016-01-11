@@ -16,7 +16,7 @@ SoundControl.prototype.loadSource = function (scene) {
     this.tankMove = new BABYLON.Sound('tankMove', '../asset/music/sound/tankMove.mp3', scene);
     this.tankFire = new BABYLON.Sound('tankFire', '../asset/music/sound/tankFire.mp3', scene);
     this.bomb = new BABYLON.Sound('bomb', '../asset/music/sound/bomb.mp3', scene);
-    var path = Math.floor(Math.random() * 3);
+    var path = Math.floor(Math.random() * 2 - 0.001);
     this.bgm = new BABYLON.Sound('Fighting', '../asset/music/fight/fight' + path + '.mp3', scene, null, { loop: false, autoplay: true});
 }
 //坦克行进音效
@@ -40,7 +40,7 @@ SoundControl.prototype.tankFireSound = function () {
 }
 //炮弹爆炸音效
 SoundControl.prototype.bombSound = function (a, b) {
-    //150码内能听到声音
-    if (Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z)) <= 150)
+    //300码内能听到声音
+    if (Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z)) <= 300)
         this.bomb.play();
 }

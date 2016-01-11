@@ -46,7 +46,7 @@ TankControl.prototype.myTankMove = function (camera, infoControl) {
         if (camera.rotation.x < -0.5) camera.rotation.x = -0.5;
         //因为相机附带移动效果因此让坦克跟随相机
         this.myTank.position.x = camera.position.x;
-        this.myTank.position.y = camera.position.y - 3.5;
+        this.myTank.position.y = camera.position.y - this.myTank.cameraOffset;
         this.myTank.position.z = camera.position.z;
         this.myTank.rotation_gun.x = camera.rotation.x;
         this.myTank.rotation_gun.y = camera.rotation.y;

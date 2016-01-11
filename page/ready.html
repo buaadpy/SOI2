@@ -2,33 +2,32 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>钢铁之魂2 SOI2</title>
     <script src="../lib/av-mini-0.5.5.js"></script>
     <audio src="../asset/music/bg_ready.mp3" autoplay="autoplay" loop="loop"></audio>
 </head>
 <body style="background: url(../asset/image/bg_ready.jpg); background-repeat:no-repeat; background-size: 100% 100%;">
 <!--欢迎词-->
 <div style="position:absolute;top:30%;left:50%;margin:-30px 0 0 -150px;width:300px;height:60px;">
-    <strong id="user" style="color:#ffffff; font-size:20px;"></strong><br>
-    <strong style="color:#ffffff; font-size:20px;">欢迎您加入钢铁之魂战场</strong>
+    <strong id="user" style="color:#666666; font-size:20px;"></strong><br>
+    <strong style="color:#666666; font-size:20px;">欢迎您加入钢铁之魂2战场</strong><br><br>
+    <strong style="color:#666666; font-size:16px;">（资料片：海岛之争）</strong>
 </div>
 <!--坦克选择-->
 <div style="position:absolute;top:62%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
-    <h3 style="color:#ffffff; font-size:17px;">请您选择坦克类型:</h3>
+    <h3 style="color:#666666; font-size:17px;">请您选择坦克类型:</h3>
     <input type="radio" name="tank" value="tankA" id="tankA"/>
-    <label for="tankA" style="color:#ffffff">侦察战车</label>
+    <label for="tankA" style="color:#666666">侦察战车</label>
     <input type="radio" name="tank" value="tankB" id="tankB" checked="checked"/>
-    <label for="tankB" style="color:#ffffff">重型坦克</label>
+    <label for="tankB" style="color:#666666">重型坦克</label>
     <input type="radio" name="tank" value="tankC" id="tankC"/>
-    <label for="tankC" style="color:#ffffff">自行火炮</label>
+    <label for="tankC" style="color:#666666">自行火炮</label>
 </div>
-<!--房间选择-->
+<!--房主选择-->
 <div style="position:absolute;top:80%;left:50%;margin:-50px 0 0 -130px;width:260px;height:100px;">
-    <!--<h3 style="color:#ffffff; font-size:10px;">请您输入房间名称:</h3>-->
-    <!--<input type="text" id="roomname" autocomplete="off" style="width: 240px;height: 25px;display: inline-block;vertical-align: top;font: 15px/17px arial;padding: 0;border: 0;outline: 0;-->
-    <!--background: url(../asset/image/search_box.png) repeat-x;"/>-->
     <br/><br/>
     <input type="submit" id="build" value="   建立战场   " onclick="build()"
-           style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;cursor: pointer;"/>
+           style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;"/>
     <input type="submit" id="join" value="   加入战场   " onclick="join()"
            style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;cursor: pointer;"/>
 </div>
@@ -38,6 +37,13 @@
     username = username.substring(username.indexOf('?') + 1, username.length);
     window.sessionStorage.setItem("username", username);
     document.getElementById("user").innerHTML = username;
+    if (username == 'buaadpy') {
+        document.getElementById("build").disabled = false;
+        document.getElementById("build").style.cursor = 'pointer';
+    } else {
+        document.getElementById("build").disabled = true;
+        document.getElementById("build").style.backgroundColor = '#808080';
+    }
 
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
     var UserLogin = AV.Object.extend("UserLogin");
@@ -49,26 +55,16 @@
     }});
 
     function build() {
-//        if (document.getElementById("roomname").value == "")
-//            alert("请输入房间名");
-//        else {
         window.sessionStorage.setItem("host", true);
         start();
-        //}
     }
 
     function join() {
-//        if (document.getElementById("roomname").value == "")
-//            alert("请输入房间名");
-//        else {
         window.sessionStorage.setItem("host", false);
         start();
-        //}
     }
 
     function start() {
-        //window.sessionStorage.setItem("roomname", document.getElementById("roomname").value);
-        window.sessionStorage.setItem("roomname", "饼饼");
         var obj = document.getElementsByName("tank");
         for (var i = 0; i < obj.length; i++) {
             if (obj[i].checked)

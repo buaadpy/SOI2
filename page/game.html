@@ -12,7 +12,7 @@
     <script type="text/javascript" src="../lib/babylon.waterMaterial.js"></script>
     <script type="text/javascript" src="../lib/av-mini-0.5.5.js"></script>
     <script type="text/javascript" src="../lib/jquery-1.4.min.js"></script>
-    <script type="text/javascript" src="http://172.22.132.146:8000/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://172.22.128.51:8000/socket.io/socket.io.js"></script>
 
     <script type="text/javascript" src="../lib/stats.js"></script>
 </head>
@@ -67,11 +67,11 @@
 <script type="text/javascript" src="../js/support/soundControl.js"></script>
 <script>
     var game = new SOI2();
-    var server = "http://172.22.132.146:8000";
+    var server = "http://172.22.128.51:8000";
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
 
     //设置fps统计窗
-    function initStats(){
+    function initStats() {
         var stats = new Stats();
         stats.setMode(0);
         stats.domElement.style.position = 'absolute';

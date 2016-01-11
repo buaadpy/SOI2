@@ -125,17 +125,17 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
         }
 
         // 按 空格(发射)
-        if (e && e.keyCode == 32) {
-            if (!myTank.inColding) {
-                soundControl.tankFireSound();
-                myTank.inColding = true;
-                _this.isShoot = true;
-                //设置冷却时间
-                setTimeout(function () {
-                    myTank.inColding = false;
-                }, myTank.coldTime);
-            }
-        }
+//        if (e && e.keyCode == 32) {
+//            if (!myTank.inColding) {
+//                soundControl.tankFireSound();
+//                myTank.inColding = true;
+//                _this.isShoot = true;
+//                //设置冷却时间
+//                setTimeout(function () {
+//                    myTank.inColding = false;
+//                }, myTank.coldTime);
+//            }
+//        }
     };
 
     document.onkeyup = function (event) {
@@ -143,7 +143,7 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
 
         // 按 X
         if (e && e.keyCode == 88) {
-            infoControl.hideUserList();
+            infoControl.hideUserList(myTank.live);
         }
 
         //位于死亡视角不能进行其他操作
@@ -156,5 +156,23 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
             else _this.isDDown = false;
             moveStop();
         }
+    }
+
+    document.onclick = function (event) {
+        //位于死亡视角不能进行其他操作
+        if (!myTank.live) return;
+        //左键发射炮弹
+        if (event.button == 0) {
+            if (!myTank.inColding) {
+                soundControl.tankFireSound();
+                myTank.inColding = true;
+                _this.isShoot = true;
+                //设置冷却时间
+                setTimeout(function () {
+                    myTank.inColding = false;
+                }, myTank.coldTime);
+            }
+        }
+        ;
     }
 }
