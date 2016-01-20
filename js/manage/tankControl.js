@@ -52,7 +52,7 @@ TankControl.prototype.myTankMove = function (camera, infoControl) {
         this.myTank.rotation_gun.y = camera.rotation.y;
         this.myTank.rotation_gun.z = camera.rotation.z;
         //控制旋转，随机数作为抖动因子模拟移动的颠簸
-        this.myTank.rotation_box.y += this.myTank.rotationFlag * this.myTank.boxRotateSpeed * (Math.random());
+        this.myTank.rotation_box.y += this.myTank.rotationFlag * this.myTank.boxRotateSpeed * (Math.random() * 0.7 + 0.3);
         //坦克入水
         if (this.myTank.position.y <= 3) {
             infoControl.swim();

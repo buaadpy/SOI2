@@ -13,7 +13,7 @@ PlayControl = function () {
 }
 
 //设定指令
-PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, infoControl) {
+PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, infoControl, stats) {
     var _this = this;
     //移动停止
     var moveStop = function () {
@@ -54,9 +54,10 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
                 }
             }
             //先转向再移动
-            if (Math.abs(camera.rotation.y - myTank.rotation_box.y) < 0.09) {
+            if (Math.abs(camera.rotation.y - myTank.rotation_box.y) < 0.1) {
                 myTank.rotationFlag = 0;
-                camera.speed = myTank.moveSpeed;
+                //统一修正为60fps下的移动速度
+                camera.speed = myTank.moveSpeed * 60 / parseInt(stats.domElement.innerText.split(" ")[0]);
             } else {
                 camera.speed = 0;
                 var a = camera.rotation.y - myTank.rotation_box.y;
@@ -107,9 +108,10 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
                 }
             }
             //先转向再移动
-            if (Math.abs(target - myTank.rotation_box.y) < 0.09) {
+            if (Math.abs(target - myTank.rotation_box.y) < 0.1) {
                 myTank.rotationFlag = 0;
-                camera.speed = myTank.moveSpeed;
+                //统一修正为60fps下的移动速度
+                camera.speed = myTank.moveSpeed * 60 / parseInt(stats.domElement.innerText.split(" ")[0]);
             } else {
                 camera.speed = 0;
                 var a = target - myTank.rotation_box.y;

@@ -22,10 +22,11 @@ CommControl.prototype.run = function (call) {
     //监听新用户登录
     this.socket.on('login', function (o) {
             if (game.isHost) {
-                if (game.userCamp != null)
+                if (game.userCamp == null) {
+                    game.userCamp = 'N';
+                    call();
+                } else
                     console.log('玩家' + o.clientId + '加入战场');
-                game.userCamp = 'N';
-                call();
             } else {
                 if (o.onlineCount <= 1) {
                     alert('管理员打扫战场中，请等待战场开启');

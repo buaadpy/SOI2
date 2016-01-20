@@ -13,10 +13,10 @@ ParticleControl.prototype.bomb = function (point) {
     var fountain = BABYLON.Mesh.CreateBox('foutain', 0.01, this.gamescene);
     fountain.position = point;
     // Create a particle system
-    var particleSystem = new BABYLON.ParticleSystem('particles', 300, this.gamescene);
+    var particleSystem = new BABYLON.ParticleSystem('particles', 200, this.gamescene);
 
     //Texture of each particle
-    particleSystem.particleTexture = new BABYLON.Texture('../asset/image/fire.png', this.gamescene);
+    particleSystem.particleTexture = new BABYLON.Texture('../asset/image/particle/fire.png', this.gamescene);
 
     // Where the particles come from
     particleSystem.emitter = fountain; // the starting object, the emitter
@@ -37,7 +37,7 @@ ParticleControl.prototype.bomb = function (point) {
     particleSystem.maxLifeTime = 0.8;
 
     // Emission rate
-    particleSystem.emitRate = 300;
+    particleSystem.emitRate = 200;
 
     // Blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD
     particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
@@ -46,8 +46,8 @@ ParticleControl.prototype.bomb = function (point) {
     particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
 
     // Direction of each particle after it has been emitted
-    particleSystem.direction1 = new BABYLON.Vector3(-12, 6, 0);
-    particleSystem.direction2 = new BABYLON.Vector3(12, 6, 0);
+    particleSystem.direction1 = new BABYLON.Vector3(-8, 4, 0);
+    particleSystem.direction2 = new BABYLON.Vector3(8, 4, 0);
 
     // Angular speed, in radians
     particleSystem.minAngularSpeed = 0;
@@ -62,7 +62,7 @@ ParticleControl.prototype.bomb = function (point) {
     // Start the particle system
     particleSystem.start();
 
-    //爆炸效果1000ms后结束，释放资源
+    //爆炸效果800ms后结束，释放资源
     var _this = this;
     setTimeout(function () {
         particleSystem.stop();

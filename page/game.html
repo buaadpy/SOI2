@@ -12,7 +12,7 @@
     <script type="text/javascript" src="../lib/babylon.waterMaterial.js"></script>
     <script type="text/javascript" src="../lib/av-mini-0.5.5.js"></script>
     <script type="text/javascript" src="../lib/jquery-1.4.min.js"></script>
-    <script type="text/javascript" src="http://172.22.128.51:8000/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://192.168.1.14:8000/socket.io/socket.io.js"></script>
 
     <script type="text/javascript" src="../lib/stats.js"></script>
 </head>
@@ -20,7 +20,8 @@
 <!--游戏绘制区域-->
 <canvas id="gameCanvas"></canvas>
 <!--瞄准器-->
-<img id="gunsight" src="../asset/image/viseur.png"/>
+<img id="gunsight"
+     src="data:image/png;base64,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"/>
 <!--信息面板-->
 <label id="tip_info" style="font-family: 'Microsoft YaHei';color:#ff0000; font-size:30px;height:50px"></label>
 <!--状态面板-->
@@ -67,7 +68,7 @@
 <script type="text/javascript" src="../js/support/soundControl.js"></script>
 <script>
     var game = new SOI2();
-    var server = "http://172.22.128.51:8000";
+    var server = "http://192.168.1.14:8000";
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
 
     //设置fps统计窗
@@ -80,7 +81,7 @@
         document.getElementById('Stats-output').appendChild(stats.domElement);
         return stats;
     }
-    var stats = initStats();
+    game.stats = initStats();
 
     //游戏启动点
     document.addEventListener("DOMContentLoaded", function () {

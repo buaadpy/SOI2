@@ -7,6 +7,7 @@
 SOI2 = function () {
     this.canvas = null;//网页画布
     this.engine = null;//游戏引擎
+    this.stats = null;//帧率监听
 
     this.scene = null;//场景
     this.camera = null;//相机
@@ -34,9 +35,6 @@ SOI2.prototype.init = function () {
     this.engine = new BABYLON.Engine(this.canvas, true);
     this.engine.loadingUIText = '正在进入钢铁之魂2战场……';
     this.engine.displayLoadingUI();
-    setTimeout(function () {
-        game.engine.hideLoadingUI();
-    }, '5000');
     //加载玩家信息
     this.userName = window.sessionStorage.getItem('username');
     this.tankType = window.sessionStorage.getItem('tanktype');
@@ -128,7 +126,7 @@ SOI2.prototype.load = function () {
         this.camera.speed = 0;
         this.camera.angularSensibility = this.tankControl.myTank.gunRotateSpeed;
         //加载交互命令
-        this.playControl.run(this.camera, this.tankControl.myTank, this.tankControl.tankList, this.soundControl, this.infoControl);
+        this.playControl.run(this.camera, this.tankControl.myTank, this.tankControl.tankList, this.soundControl, this.infoControl, this.stats);
         //加载音乐
         this.soundControl.loadSource(this.scene);
     }
@@ -165,6 +163,9 @@ SOI2.prototype.update = function () {
         //更新显示数据30Hz
         if (Math.random() * (60 / 30) < 1) {
             this.infoControl.updateInfoPanel(this.tankControl.myTank);
+        }
+        //更新小地图6Hz
+        if (Math.random() * (60 / 6) < 1) {
             this.infoControl.updateSmallMap(this.tankControl.myTank, this.tankControl.tankList);
         }
         //采用60Hz的同步频率
@@ -177,7 +178,7 @@ SOI2.prototype.draw = function () {
     this.tankControl.draw();
     this.shellControl.draw();
     this.scene.render();
-    stats.update();
+    this.stats.update();
 }
 
 //游戏结束
