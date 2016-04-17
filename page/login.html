@@ -6,7 +6,7 @@
     <script src="../lib/av-mini-0.5.5.js"></script>
     <audio src="../asset/music/bg_login.mp3" autoplay="autoplay" loop="loop"></audio>
 </head>
-<body style="background: url(../asset/image/bg_login.jpg); background-repeat:no-repeat; background-size: 100% 100%;">
+<body style="background: url(../asset/image/bg_login.jpg); background-repeat:no-repeat; background-size: 100% 100%;overflow:hidden;">
 <!--标题-->
 <div style="position:absolute;top:47%;left:50%;margin:-50px 0 0 -300px;width:600px;height:100px;">
     <h1 id="title" style="color:#ffffff; font-size:46px;text-align:center;font-family: 'Courier New';">Soul of Iron
@@ -93,6 +93,9 @@
     document.getElementsByTagName('body')[0].style.height = window.innerHeight + 'px';
     document.getElementById("username").focus();
     AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
+    window.onresize = function(){
+        document.getElementsByTagName('body')[0].style.height = window.innerHeight + 'px';
+    }
 </script>
 </body>
 </html>

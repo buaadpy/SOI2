@@ -6,7 +6,7 @@
     <script src="../lib/av-mini-0.5.5.js"></script>
     <audio src="../asset/music/bg_ready.mp3" autoplay="autoplay" loop="loop"></audio>
 </head>
-<body style="background: url(../asset/image/bg_ready.jpg); background-repeat:no-repeat; background-size: 100% 100%;">
+<body style="background: url(../asset/image/bg_ready.jpg); background-repeat:no-repeat; background-size: 100% 100%;overflow:hidden;">
 <!--欢迎词-->
 <div style="position:absolute;top:30%;left:50%;margin:-30px 0 0 -150px;width:300px;height:60px;">
     <strong id="user" style="color:#666666; font-size:20px;"></strong><br>
@@ -71,6 +71,10 @@
                 window.sessionStorage.setItem("tanktype", obj[i].value);
         }
         window.location.href = "game.html";
+    }
+
+    window.onresize = function(){
+        document.getElementsByTagName('body')[0].style.height = window.innerHeight + 'px';
     }
 </script>
 </body>

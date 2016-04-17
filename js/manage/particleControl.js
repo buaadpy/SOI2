@@ -67,5 +67,5 @@ ParticleControl.prototype.bomb = function (point) {
     setTimeout(function () {
         particleSystem.stop();
         _this.gamescene.removeMesh(fountain);
-    }, '800');
+    }, 800);
 }

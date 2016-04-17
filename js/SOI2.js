@@ -63,16 +63,18 @@ SOI2.prototype.init = function () {
     this.tankControl = new TankControl();
     this.tankControl.gamescene = this.scene;
     this.commControl = new CommControl();
+    this.commControl.game = this;
     this.playControl = new PlayControl();
     this.soundControl = new SoundControl();
     //连接战场,连接成功后启动游戏流程
+    var _this = this;
     this.commControl.run(function () {
         //加载游戏内容
-        game.load();
+        _this.load();
         //建立60FPS的游戏循环
-        game.engine.runRenderLoop(function () {
-            game.update();
-            game.draw();
+        _this.engine.runRenderLoop(function () {
+            _this.update();
+            _this.draw();
         });
     });
 }
@@ -185,7 +187,8 @@ SOI2.prototype.draw = function () {
 SOI2.prototype.gameover = function (result) {
     this.infoControl.showWinner(result);
     this.infoControl.showUserList(this.tankControl.tankList);
+    var _this = this;
     setTimeout(function () {
-        window.location.href = 'ready.html?' + game.userName;
-    }, '7000');
+        window.location.href = 'ready.html?' + _this.userName;
+    }, 7000);
 }

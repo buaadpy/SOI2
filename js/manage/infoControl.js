@@ -85,14 +85,14 @@ InfoControl.prototype.death = function () {
     $('#tip_info').text('[——坦克已被击退——]');
     setTimeout(function () {
         $('#tip_info').text('[——坦克已被击退——]');
-    }, '3000');
+    }, 3000);
 }
 //提示坦克泡水
 InfoControl.prototype.swim = function () {
     $('#tip_info').text('警告：坦克正在进水受损！');
     setTimeout(function () {
         $('#tip_info').text('');
-    }, '500');
+    }, 500);
 }
 //提示遭受攻击
 InfoControl.prototype.beAttack = function () {
@@ -100,14 +100,14 @@ InfoControl.prototype.beAttack = function () {
     $('#tip_info').text('警告：坦克遭受火力攻击！');
     setTimeout(function () {
         $('#tip_info').text('');
-    }, '2000');
+    }, 2000);
 }
 //提示敌方加入
 InfoControl.prototype.enemyJoin = function () {
     $('#tip_info').text('警告：新的敌人空降战场！');
     setTimeout(function () {
         $('#tip_info').text('');
-    }, '2000');
+    }, 2000);
 }
 //提示友军加入
 InfoControl.prototype.friendJoin = function () {
@@ -116,7 +116,7 @@ InfoControl.prototype.friendJoin = function () {
     setTimeout(function () {
         $('#tip_info').css('color', '#FF0000');
         $('#tip_info').text('');
-    }, '2000');
+    }, 2000);
 }
 //显示获胜方
 InfoControl.prototype.showWinner = function (result) {

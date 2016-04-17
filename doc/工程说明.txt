@@ -1,0 +1,7 @@
+asset  (游戏资源)
+css    (css文件)
+doc    (相关文档)
+js     (javascript文件)
+lib    (外部依赖项)
+page   (游戏页面)
+server (服务端程序)

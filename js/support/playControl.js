@@ -175,6 +175,5 @@ PlayControl.prototype.run = function (camera, myTank, tankList, soundControl, in
                 }, myTank.coldTime);
             }
         }
-        ;
     }
 }
