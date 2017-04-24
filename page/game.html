@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>钢铁之魂2 SOI2</title>
+    <title>钢铁之魂2</title>
 
     <link rel="stylesheet" type="text/css" href="../css/game.css">
     <link rel="stylesheet" type="text/css" href="../css/list.css">
@@ -10,11 +10,20 @@
     <script type="text/javascript" src="../lib/babylon.js"></script>
     <script type="text/javascript" src="../lib/babylon.objFileLoader.js"></script>
     <script type="text/javascript" src="../lib/babylon.waterMaterial.js"></script>
-    <script type="text/javascript" src="../lib/av-mini-0.5.5.js"></script>
     <script type="text/javascript" src="../lib/jquery-1.4.min.js"></script>
-    <script type="text/javascript" src="http://192.168.1.19:8000/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="../lib/stats.js"></script>
+	
+    <script type="text/javascript" src="http://localhost:8000/socket.io/socket.io.js"></script>
 
-    <script type="text/javascript" src="../lib/stats.js"></script>
+	<script type="text/javascript" src="../js/SOI2.js"></script>
+	<script type="text/javascript" src="../js/Tank.js"></script>
+	<script type="text/javascript" src="../js/Information.js"></script>
+	<script type="text/javascript" src="../js/MapManage.js"></script>
+	<script type="text/javascript" src="../js/TankManage.js"></script>
+	<script type="text/javascript" src="../js/Communication.js"></script>
+	<script type="text/javascript" src="../js/Particle.js"></script>
+	<script type="text/javascript" src="../js/Operation.js"></script>
+	<script type="text/javascript" src="../js/Sound.js"></script>
 </head>
 <body>
 <!--游戏绘制区域-->
@@ -25,12 +34,15 @@
 <!--信息面板-->
 <label id="tip_info" style="font-family: 'Microsoft YaHei';color:#ff0000; font-size:30px;height:50px"></label>
 <!--状态面板-->
-<div id="tank_info" style="background-color: rgba(255, 255, 255, 0.2); width:200px; height:140px;">
-    <label id="info_name" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br><br>
-    <label id="info_life" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
-    <label id="info_position" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
-    <label id="info_height" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label><br>
-    <label id="info_colding" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:15px;"></label>
+<div id="tank_info" style="width:480px; height:60px;">
+    <img id="logo_position" style="width:30px; height:30px;"
+         src="data:image/png;base64,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"/>
+    <label id="info_position" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:25px;"></label>
+    <img id="logo_life" style="width:30px; height:30px;margin-left: 40px"
+         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEj0lEQVR4Xu1bTU7jMBQmCBawGdggAYspJxg4wbQnGDgB5QRTTlA4wTAnoJxg4ASEE9A5AWUBSGwKG1hQtXwvciLHeUnsFtdpk0iVqtaO3/ve8/P7s7dQ8scrOf8LFQC6GvD09FQbjUa/ML6Gz67uvCmP62K9nud5V5ubmz2dtXM1AIzXh8PhH7y0qEyzfEJY3cXFxWMA4WcBkQpAv99fe39//4fJdR0kCzzGX1lZOVhfX3/haGQBeH5+3v34+LiG1Ne4SUD3P36/LBjT+6D3Rwq9L8vLy42NjQ3aIrEnAUAG869g/Axq1dHdX9MGiOwUtmsTQLSw9jd5fdDOghADQKj9rTB08vwLqFErTY2mzWjeeoKPM4w7VEDorq6uNmQ+YgA8Pj7SpN/KpNPt7e2TvEWL+P/Dw8MJtKGt0PZ3a2uLNCR4IgDEMXenDL7A4GYRmdOlCULtqJoAUHbCbRwBwEj/BszXdRcq8jjw5oO+nxKNkRbIAJD0a5FqeF4j7wwtMtMybeTLwAheS7/1INydaAuQ5R8MBmT8wucKA/ZnhUEdOlUtCLdBoAEqQvjzCNKnvTM3D3hsQgvOVQ0PAAA6JG3y+oIHRx5OCt5zmlVExNHYl+g/gJZfBgCoxwX+yI0RZhEICHoU0g1tCI53DoC5sf6qkCDobugulxIA2RA6A0D4621IoiZLCAT1EGec2owznAMgmL/NiDJfAMKeLRCcA8C5pYwxteZ+FwEAHwzLLil3mFgzwhUAUkzgxAgyQUmlAQwC1RawFYZXNmAaNoDOeqj1d25zI2F5lldfEPn8KGWlvOd+Eh/BqgaInAJFlDEPz0LQ1FtaWjrgUtx5a1kDgELNt7e3uzQPL48w0/8pxY3s7o5pyG4NADWfYMrQOOMBtnHKzhoAKenncfjSnhM6MtoTMLACwNYpUHoNcGEDoNFBTq8QW0BUlajyGitImhBnOPaV/AlTn8CaDSDiRdqZaou2QSDmW+Ok7a0CIECgNppd+nASBeHNNC9RGn+P+Z2U+ZTU7JpKPnyXdQDy1LgKh5NFSg6zKhyuwmFLZfnKBtjyBPOMH2eFM+bMtQ0gz426TbMet3UBysigarqnK1WTcUynRmL6OGGuLg2IWagqFfgoWWnxBZvlcYobsDh1b8WaGqn5Er+dmPr3uszTuNTyeOkbJErfIlOSJinqEquHWybWJCX2R08OVGwaI5N9+xVjGeN7D1tTo3dnNUr6GNT4CgJcvwM2LiZ90JNslORaZSksxZF45JqBSdbH0XcuwvDoNWyrrNgGiWZpOpoQf59OQoSruRBqm45cZX2+WZoGiQKHz5zRHRQijk0LEa4YFz2B1BQZ63YlXwN81FPb5YlgcSL4+Jq4cID+HdKQi3EzMrYBEXXJQ9QgW0yV6hUltbpaUku9MoPe4QQIIQOigGmUkbXNPJimKzNpF7tY5mOngEqgUCNiMq+nxzZvk77/Bq2/+0aXpuQVxbU5KmuzF5Impc7WfNrv2LKUPSZNTn20e4LFMUlGpYZPUe8QhhcnL3XtlDYAtiTl+r0VAK4l4Hr9T9cU726D/q/eAAAAAElFTkSuQmCC"/>
+    <label id="info_life" style="font-family: 'Microsoft YaHei';color:#ffffff; font-size:25px;"></label>
+    <img id="logo_colding" style="width:58px; height:58px;margin-left: 70px"
+         src="data:image/png;base64,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"/>
 </div>
 <!--小地图-->
 <div id="smallMap"></div>
@@ -55,21 +67,9 @@
 <!--fps统计-->
 <div id="Stats-output"></div>
 
-<script type="text/javascript" src="../js/SOI2.js"></script>
-<script type="text/javascript" src="../js/object/shell.js"></script>
-<script type="text/javascript" src="../js/object/tank.js"></script>
-<script type="text/javascript" src="../js/manage/infoControl.js"></script>
-<script type="text/javascript" src="../js/manage/mapControl.js"></script>
-<script type="text/javascript" src="../js/manage/shellControl.js"></script>
-<script type="text/javascript" src="../js/manage/tankControl.js"></script>
-<script type="text/javascript" src="../js/support/commControl.js"></script>
-<script type="text/javascript" src="../js/manage/particleControl.js"></script>
-<script type="text/javascript" src="../js/support/playControl.js"></script>
-<script type="text/javascript" src="../js/support/soundControl.js"></script>
 <script>
     var game = new SOI2();
-    var server = "http://192.168.1.19:8000";
-    AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
+    var server = "http://localhost:8000";
 
     //设置fps统计窗
     function initStats() {

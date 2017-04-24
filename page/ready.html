@@ -2,74 +2,28 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>钢铁之魂2 SOI2</title>
-    <script src="../lib/av-mini-0.5.5.js"></script>
+    <title>钢铁之魂2</title>
     <audio src="../asset/music/bg_ready.mp3" autoplay="autoplay" loop="loop"></audio>
 </head>
 <body style="background: url(../asset/image/bg_ready.jpg); background-repeat:no-repeat; background-size: 100% 100%;overflow:hidden;">
 <!--欢迎词-->
-<div style="position:absolute;top:30%;left:50%;margin:-30px 0 0 -150px;width:300px;height:60px;">
-    <strong id="user" style="color:#666666; font-size:20px;"></strong><br>
-    <strong style="color:#666666; font-size:20px;">欢迎您加入钢铁之魂2战场</strong><br><br>
-    <strong style="color:#666666; font-size:16px;">（资料片：海岛之争）</strong>
+<div style="position:absolute;top:30%;left:50%;margin:-30px 0 0 -160px;width:320px;height:60px;">
+    <strong id="user" style="color:#666666; font-size:20px;"></strong><br><br>
+    <strong style="color:#666666; font-size:20px;">欢迎您加入钢铁之魂2（海岛之战）</strong><br><br>
 </div>
-<!--坦克选择-->
-<div style="position:absolute;top:62%;left:50%;margin:-50px 0 0 -150px;width:300px;height:100px;">
-    <h3 style="color:#666666; font-size:17px;">请您选择坦克类型:</h3>
-    <input type="radio" name="tank" value="tankA" id="tankA"/>
-    <label for="tankA" style="color:#666666">侦察战车</label>
-    <input type="radio" name="tank" value="tankB" id="tankB" checked="checked"/>
-    <label for="tankB" style="color:#666666">重型坦克</label>
-    <input type="radio" name="tank" value="tankC" id="tankC"/>
-    <label for="tankC" style="color:#666666">自行火炮</label>
-</div>
-<!--房主选择-->
-<div style="position:absolute;top:80%;left:50%;margin:-50px 0 0 -130px;width:260px;height:100px;">
-    <br/><br/>
-    <input type="submit" id="build" value="   建立战场   " onclick="build()"
-           style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;"/>
-    <input type="submit" id="join" value="   加入战场   " onclick="join()"
-           style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block;cursor: pointer;"/>
+<!--按钮-->
+<div style="position:absolute;top:80%;left:50%;margin:-50px 0 0 -60px;width:120px;height:100px;">
+    <input type="submit" id="join" value="   加入战场   " onclick="start()"
+           style="height: 30px;line-height: 15px;padding: 3px 20px;background-color: #2C97E8;color: #fff;display: inline-block; cursor: pointer;"/>
 </div>
 <script type="text/javascript">
     document.getElementsByTagName('body')[0].style.height = window.innerHeight + 'px';
     var username = window.location.search;
-    username = username.substring(username.indexOf('?') + 1, username.length);
+	username = username.substring(username.indexOf('?') + 1, username.length);
     window.sessionStorage.setItem("username", username);
     document.getElementById("user").innerHTML = username;
-    if (username == 'buaadpy') {
-        document.getElementById("build").disabled = false;
-        document.getElementById("build").style.cursor = 'pointer';
-    } else {
-        document.getElementById("build").disabled = true;
-        document.getElementById("build").style.backgroundColor = '#808080';
-    }
-
-    AV.initialize("ahrxpnr9g6t01fd03iv5c8y69j5m1zo3oh3h12xoek336g2s", "uk5g0fhd8bwe0y1pe9xv55ft321yglbcctpbbbmn3160eq84");
-    var UserLogin = AV.Object.extend("UserLogin");
-    var login = new UserLogin();
-    login.set("userName", username);
-    //    login.set("brownerVersion", (navigator.appVersion).toString());
-    login.save(null, {success: function (post) {
-    }, error: function (post, error) {
-    }});
-
-    function build() {
-        window.sessionStorage.setItem("host", true);
-        start();
-    }
-
-    function join() {
-        window.sessionStorage.setItem("host", false);
-        start();
-    }
 
     function start() {
-        var obj = document.getElementsByName("tank");
-        for (var i = 0; i < obj.length; i++) {
-            if (obj[i].checked)
-                window.sessionStorage.setItem("tanktype", obj[i].value);
-        }
         window.location.href = "game.html";
     }
 

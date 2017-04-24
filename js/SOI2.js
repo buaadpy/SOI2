@@ -1,10 +1,5 @@
-/**
- * Created by 杜鹏宇 on 2015/7/8
- * Modified by
- */
-
 //钢铁之魂2
-SOI2 = function () {
+var SOI2 = function () {
     this.canvas = null;//网页画布
     this.engine = null;//游戏引擎
     this.stats = null;//帧率监听
@@ -14,18 +9,15 @@ SOI2 = function () {
     this.light = null;//光照
 
     this.userName = null;//玩家名称
-    this.isHost = null;//是否为游戏主机
-    this.tankType = null;//坦克类型
     this.userCamp = null;//玩家阵营
 
-    this.infoControl = null;//信息项
-    this.mapControl = null;//地图项
-    this.particleControl = null;//粒子项
-    this.shellControl = null;//炮弹项
-    this.tankControl = null;//坦克项
-    this.commControl = null;//通信项
-    this.playControl = null;//指令项
-    this.soundControl = null;//声音项
+    this.information = null;//信息项
+    this.mapManage = null;//地图项
+    this.particle = null;//粒子项
+    this.tankManage = null;//坦克项
+    this.communication = null;//通信项
+    this.operation = null;//指令项
+    this.sound = null;//声音项
 }
 
 //游戏初始化
@@ -33,42 +25,28 @@ SOI2.prototype.init = function () {
     //加载游戏引擎
     this.canvas = document.getElementById('gameCanvas');
     this.engine = new BABYLON.Engine(this.canvas, true);
-    this.engine.loadingUIText = '正在进入钢铁之魂2战场……';
+    this.engine.loadingUIText = '正在进入钢铁之魂2战场，请稍候';
     this.engine.displayLoadingUI();
     //加载玩家信息
     this.userName = window.sessionStorage.getItem('username');
-    this.tankType = window.sessionStorage.getItem('tanktype');
-    if (window.sessionStorage.getItem('host') == 'true') {
-        this.isHost = true;
-    } else {
-        this.isHost = false;
-    }
     window.sessionStorage.removeItem('username');
-    window.sessionStorage.removeItem('tanktype');
-    window.sessionStorage.removeItem('host');
     //初始化场景
     this.scene = new BABYLON.Scene(this.engine);
-    this.scene.gravity = new BABYLON.Vector3(0, -9.8, 0);
-    this.scene.collisionsEnabled = true;
     //初始化灯光
     this.light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this.scene);
     //初始化加载项
-    this.infoControl = new InfoControl();
-    this.mapControl = new MapControl();
-    this.mapControl.gamescene = this.scene;
-    this.particleControl = new ParticleControl();
-    this.particleControl.gamescene = this.scene;
-    this.shellControl = new ShellControl();
-    this.shellControl.gamescene = this.scene;
-    this.tankControl = new TankControl();
-    this.tankControl.gamescene = this.scene;
-    this.commControl = new CommControl();
-    this.commControl.game = this;
-    this.playControl = new PlayControl();
-    this.soundControl = new SoundControl();
+    this.information = new Information();
+    this.mapManage = new MapManage(this.scene);
+    this.particle = new Particle(this.scene);
+    this.tankManage = new TankManage(this.scene);
+    this.communication = new Communication();
+    this.communication.game = this;
+    this.operation = new Operation();
+    this.operation.game = this;
+    this.sound = new Sound(this.scene);
     //连接战场,连接成功后启动游戏流程
     var _this = this;
-    this.commControl.run(function () {
+    this.communication.run(function () {
         //加载游戏内容
         _this.load();
         //建立60FPS的游戏循环
@@ -81,112 +59,55 @@ SOI2.prototype.init = function () {
 
 //游戏内容加载
 SOI2.prototype.load = function () {
-    //游戏主机逻辑
-    if (this.isHost) {
-        $('#gunsight').css('visibility', 'hidden');
-        $('#tank_info').css('visibility', 'hidden');
-        //加载地图
-        this.mapControl.createMap();
-        //添加相机
-        this.camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 100, -600), this.scene);
-        this.camera.setTarget(new BABYLON.Vector3(0, 30, 0));
-        this.camera.attachControl(this.canvas);
-        this.camera.keysUp = [87];
-        this.camera.keysDown = [83];
-        this.camera.keysLeft = [65];
-        this.camera.keysRight = [68];
-        this.camera.inertia = 0;
-        this.camera.speed = 40;
-        this.camera.angularSensibility = 5000;
+    //加载地图
+    this.mapManage.createMap();
+    //加载小地图
+    this.information.showSmallMap();
+    //创建出生点
+    var startPoint;
+    if (this.userCamp == 'R') {
+        startPoint = new BABYLON.Vector3(-220 + Math.random() * 10, 50, 360 + Math.random() * 10);
     } else {
-        //加载地图
-        this.mapControl.createMap();
-        //加载小地图
-        this.infoControl.showSmallMap();
-        //创建出生点
-        var startPoint;
-        if (this.userCamp == 'R') {
-            startPoint = new BABYLON.Vector3(200 + Math.random() * 10, 18, -50 + Math.random() * 10);
-        } else {
-            startPoint = new BABYLON.Vector3(-370 + Math.random() * 10, 18, -10 + Math.random() * 10);
-        }
-        //新建玩家坦克
-        this.tankControl.myTank = this.tankControl.addTank(this.userName, this.userCamp, new BABYLON.Vector3(0, 0, 0), this.tankType);
-        this.commControl.send('Server', this.userName, 'newTank', {user: this.userName, camp: this.userCamp, position: startPoint, type: this.tankType});
-        //添加相机
-        this.camera = new BABYLON.FreeCamera('camera', startPoint, this.scene);
-        this.camera.setTarget(new BABYLON.Vector3(0, 30, 0));
-        this.camera.attachControl(this.canvas);
-        this.camera.ellipsoid = new BABYLON.Vector3(0.6, 1.5, 0.6);
-        this.camera.checkCollisions = true;
-        this.camera.applyGravity = true;
-        this.camera.keysUp = [87];
-        this.camera.keysDown = [83];
-        this.camera.keysLeft = [65];
-        this.camera.keysRight = [68];
-        this.camera.inertia = 0;
-        this.camera.speed = 0;
-        this.camera.angularSensibility = this.tankControl.myTank.gunRotateSpeed;
-        //加载交互命令
-        this.playControl.run(this.camera, this.tankControl.myTank, this.tankControl.tankList, this.soundControl, this.infoControl, this.stats);
-        //加载音乐
-        this.soundControl.loadSource(this.scene);
+        startPoint = new BABYLON.Vector3(-190 + Math.random() * 10, 50, -300 + Math.random() * 10);
     }
+    //新建玩家坦克
+    this.tankManage.myTank = this.tankManage.addTank(this.userName, this.userCamp, new BABYLON.Vector3(0, 0, 0));
+    //添加相机
+    this.camera = new BABYLON.FreeCamera('camera', startPoint, this.scene);
+    this.camera.setTarget(new BABYLON.Vector3(0, 30, 0));
+    this.camera.attachControl(this.canvas);
+    this.camera.keysUp = [87];
+    this.camera.keysDown = [83];
+    this.camera.keysLeft = [65];
+    this.camera.keysRight = [68];
+    this.camera.inertia = 0;
+    this.camera.speed = 0;
+    this.camera.angularSensibility = this.tankManage.myTank.gunRotateSpeed;
+    //加载交互命令
+    this.operation.run();
+    //加载音乐
+    this.sound.loadSource(this.userCamp);
 }
 
 //游戏逻辑更新
 SOI2.prototype.update = function () {
-    //游戏主机逻辑
-    if (this.isHost) {
-        //炮弹飞行
-        var bombId = this.shellControl.fly(this.tankControl.tankList, this.userName, this.infoControl);
-        if (bombId.length != 0)
-            this.commControl.send('All', 'Server', 'shellBomb', bombId);
-        //采用60Hz的同步频率
-        this.tankControl.serverUpdate();
-        this.commControl.send('All', 'Server', 'updateTank', this.tankControl.serverData);
-        this.shellControl.serverUpdate();
-        this.commControl.send('All', 'Server', 'updateShell', this.shellControl.serverData);
-        //判断游戏是否结束5Hz
-        if (Math.random() * (60 / 5) < 1) {
-            var winner = this.tankControl.getWinner();
-            if (winner != null) {
-                this.commControl.send('All', 'Server', 'gameOver', winner);
-            }
-        }
-    } else {
-        //发射炮弹逻辑
-        if (this.playControl.isShoot) {
-            this.commControl.send('Server', this.userName, 'newShell', this.shellControl.getShootData(this.canvas, this.camera, this.tankControl.myTank));
-            this.playControl.isShoot = false;
-        }
-        //坦克移动
-        this.tankControl.myTankMove(this.camera, this.infoControl);
-        //更新显示数据30Hz
-        if (Math.random() * (60 / 30) < 1) {
-            this.infoControl.updateInfoPanel(this.tankControl.myTank);
-        }
-        //更新小地图6Hz
-        if (Math.random() * (60 / 6) < 1) {
-            this.infoControl.updateSmallMap(this.tankControl.myTank, this.tankControl.tankList);
-        }
-        //采用60Hz的同步频率
-        this.commControl.send('Server', this.userName, 'sendTankInfo', this.tankControl.getTankData());
-    }
+    this.tankManage.myTankMove(this.camera, this.information, this.mapManage.island);
+    this.information.updateInfoPanel(this.tankManage.myTank);
+    this.information.updateSmallMap(this.tankManage.myTank, this.tankManage.tankList);
+    this.communication.send('UPDATA', this.tankManage.myTank.getTankData());
 }
 
 //游戏画面绘制
 SOI2.prototype.draw = function () {
-    this.tankControl.draw();
-    this.shellControl.draw();
+    this.tankManage.draw();
     this.scene.render();
     this.stats.update();
 }
 
 //游戏结束
 SOI2.prototype.gameover = function (result) {
-    this.infoControl.showWinner(result);
-    this.infoControl.showUserList(this.tankControl.tankList);
+    this.information.showWinner(result);
+    this.information.showUserList(this.tankManage.tankList);
     var _this = this;
     setTimeout(function () {
         window.location.href = 'ready.html?' + _this.userName;

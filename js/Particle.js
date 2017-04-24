@@ -1,15 +1,10 @@
-/**
- * Created by 杜鹏宇 on 2015/12/4
- * Modified by
- */
-
 //粒子系统
-ParticleControl = function () {
-    this.gamescene = null;//连接游戏场景
+var Particle = function (scene) {
+    this.gamescene = scene;//连接游戏场景
 }
 
 //爆炸效果
-ParticleControl.prototype.bomb = function (point) {
+Particle.prototype.bomb = function (point) {
     var fountain = BABYLON.Mesh.CreateBox('foutain', 0.01, this.gamescene);
     fountain.position = point;
     // Create a particle system

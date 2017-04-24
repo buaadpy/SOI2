@@ -1,13 +1,7 @@
-/**
- * Created by 杜鹏宇 on 2015/9/10
- * Modified by
- */
-
 //坦克类
-Tank = function () {
+var Tank = function () {
     this.user = '';//玩家名称
     this.camp = '';//玩家阵营
-    this.type = '';//坦克类型
     this.life = 100;//生命值
     this.live = true;//存活标记
     this.object_box = null;//坦克身体
@@ -28,46 +22,25 @@ Tank = function () {
 }
 
 //创造坦克
-Tank.prototype.create = function (user, camp, position, type, scene) {
+Tank.prototype.create = function (user, camp, position, scene) {
     this.user = user;
     this.camp = camp;
     this.position = position;
-    this.type = type;
     this.life = 100;
     this.live = true;
-    //根据不同类型设置不同坦克参数
-    if (this.type == 'tankA') {//侦查战车
-        this.attackDamage = 30;//攻击伤害
-        this.shellSpeed = 8;//炮弹速度
-        this.gunRotateSpeed = 4000;//炮台旋转速度
-        this.boxRotateSpeed = 0.07;//车身旋转速度
-        this.moveSpeed = 3.2;//坦克速度
-        this.protectDamage = 5;//防御减伤
-        this.coldTime = 2700;//冷却时间
-        this.cameraOffset = 3.1;//相机偏移量
-    } else if (this.type == 'tankB') {//重型坦克
-        this.attackDamage = 40;//攻击伤害
-        this.shellSpeed = 10;//炮弹速度
-        this.gunRotateSpeed = 4800;//炮台旋转速度
-        this.boxRotateSpeed = 0.06;//车身旋转速度
-        this.moveSpeed = 2.5;//坦克速度
-        this.protectDamage = 10;//防御减伤
-        this.coldTime = 4000;//冷却时间
-        this.cameraOffset = 2.2;//相机偏移量
-    } else {//自行火炮
-        this.attackDamage = 60;//攻击伤害
-        this.shellSpeed = 13;//炮弹速度
-        this.gunRotateSpeed = 5500;//炮台旋转速度
-        this.boxRotateSpeed = 0.05;//车身旋转速度
-        this.moveSpeed = 1.8;//坦克速度
-        this.protectDamage = 5;//防御减伤
-        this.coldTime = 5200;//冷却时间
-        this.cameraOffset = 3;//相机偏移量
-    }
+    this.attackDamage = 40;//攻击伤害
+    this.shellSpeed = 10;//炮弹速度
+    this.gunRotateSpeed = 4800;//炮台旋转速度
+    this.boxRotateSpeed = 0.06;//车身旋转速度
+    this.moveSpeed = 10;//坦克速度
+    this.protectDamage = 10;//防御减伤
+    this.coldTime = 3000;//冷却时间
+    this.cameraOffset = 2.8;//相机偏移量
+
     //加载坦克模型
     var loader = new BABYLON.AssetsManager(scene);
     var _this = this;
-    var loadTank = loader.addMeshTask(this.user, ['tank', 'gun'], '../asset/model/', this.type + '.obj');
+    var loadTank = loader.addMeshTask(this.user, ['tank', 'gun'], '../asset/model/', 'tankC.obj');
     loadTank.onSuccess = function () {
         if (loadTank.loadedMeshes[0].name == 'gun') {
             _this.object_box = loadTank.loadedMeshes[1];
@@ -83,7 +56,6 @@ Tank.prototype.create = function (user, camp, position, type, scene) {
         loader.useDefaultLoadingScreen = false;
         loader.load();
     } catch (e) {
-        console.log('游戏错误:' + e);
     }
 }
 //绘制坦克
@@ -103,4 +75,16 @@ Tank.prototype.draw = function () {
         this.object_gun.rotation.y = this.rotation_gun.y;
         this.object_gun.rotation.z = this.rotation_gun.z;
     }
+}
+//获取坦克数据
+Tank.prototype.getTankData = function () {
+    var data = {
+        user: this.user,
+        camp: this.camp,
+        position: this.position,
+        rotation_box: this.rotation_box,
+        rotation_gun: this.rotation_gun,
+        protectDamage: this.protectDamage
+    }
+    return data;
 }
